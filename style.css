@@ -1,0 +1,33 @@
+body {
+  text-align: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.card {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 0.25rem;
+  background-color: #888;
+  text-align: left;
+  transition: 500ms;
+}
+.card:hover {
+  background-color: #777;
+}
+#preview {
+  transition: 500ms;
+}
+#title {
+  display: inline-block;
+  width: calc(50% - 66px);
+  max-width:300px;
+}
+#desc {
+  width: 50%;
+  max-width: 370px;
+  resize: none;
+}
