@@ -25,3 +25,17 @@ function add() {
   reload()
 }
 reload()
+
+window.addEventListener("click", (event) => {
+  if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox') {
+    let t = event.target.getBoundingClientRect();
+    let b = document.body.getBoundingClientRect();
+    confetti({
+      origin: {
+        x: t.x / b.width,
+        y: t.y / b.height
+      },
+      disableForReducedMotion: true
+    });
+  }
+});
