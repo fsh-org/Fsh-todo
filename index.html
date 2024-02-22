@@ -62,7 +62,7 @@
     function reload() {
       let data = JSON.parse(localStorage.getItem('todo')) || [];
       g('preview').innerHTML = data.map(r => `<div class="card">
-  <input class="canvas-confetti-btn" type="checkbox" onchange="del(${r.id})"> ${r.title}<br>${r.desc}</div>`).join('')
+  <input type="checkbox" onchange="del(${r.id})"> ${r.title}<br>${r.desc}</div>`).join('')
     }
     function del(id) {
       let data = JSON.parse(localStorage.getItem('todo')) || [];
@@ -75,7 +75,7 @@
       data.push({
         title: g('title').value,
         desc: g('desc').value,
-        id: Math.floor(Math.random()*100000)
+        id: Math.floor(Math.random()*1000000)
       })
       g('title').value = '';
       g('desc').value = '';
@@ -91,7 +91,7 @@ window.addEventListener("click", (event) => {
     confetti({
       origin: {
         x: 0.27,
-        y: 0.5
+        y: event.target.getBoundingClientRect().y / document.body.getBoundingClientRect().height
       },
       disableForReducedMotion: true
     });
