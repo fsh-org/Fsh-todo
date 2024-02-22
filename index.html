@@ -13,31 +13,8 @@
     <meta property="og:image" content="https://fsh.plus/fsh.png"/>
     <meta name="theme-color" content="#a89c9b">
     <!-- ------------------ -->
-    <style>
-      body {
-        text-align: center;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-      }
-      .card {
-        width: 50%;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
-        padding: 5px;
-        border-radius: 0.25rem;
-        background-color: #888;
-        text-align: left;
-        transition: 500ms;
-      }
-      .card:hover {
-        background-color: #777;
-      }
-      #preview {
-        transition: 500ms;
-      }
-   </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   </head>
   <body>
     <a href="https://fsh.plus">
@@ -49,53 +26,26 @@
       </table>
     </a>
     <h2 style="margin-top:-20px">ToDo</h2>
-    <input id="title" style="display:inline-block;width:calc(50% - 66px);max-width:300px;">
+    <input id="title">
     <button onclick="add()">Add <svg style="display:inline-block;height:20px;margin-bottom:-5px;fill:#fff;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg></button>
     <br>
-    <textarea id="desc" style="width:50%;max-width:370px;resize:none;"></textarea>
+    <textarea id="desc"></textarea>
     <div id="preview"></div>
   </body>
+  <script src="script.js"></script>
   <script>
-    function g(id) {
-      return document.getElementById(id)
-    }
-    function reload() {
-      let data = JSON.parse(localStorage.getItem('todo')) || [];
-      g('preview').innerHTML = data.map(r => `<div class="card">
-  <input type="checkbox" onchange="del(${r.id})"> ${r.title}<br>${r.desc}</div>`).join('')
-    }
-    function del(id) {
-      let data = JSON.parse(localStorage.getItem('todo')) || [];
-      data = data.filter(e => e.id != id);
-      localStorage.setItem('todo', JSON.stringify(data))
-      reload()
-    }
-    function add() {
-      let data = JSON.parse(localStorage.getItem('todo')) || [];
-      data.push({
-        title: g('title').value,
-        desc: g('desc').value,
-        id: Math.floor(Math.random()*1000000)
-      })
-      g('title').value = '';
-      g('desc').value = '';
-      localStorage.setItem('todo', JSON.stringify(data))
-      reload()
-    }
-    reload()
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <script>
-window.addEventListener("click", (event) => {
-  if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox') {
-    confetti({
-      origin: {
-        x: 0.27,
-        y: event.target.getBoundingClientRect().y / document.body.getBoundingClientRect().height
-      },
-      disableForReducedMotion: true
+    window.addEventListener("click", (event) => {
+      if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox') {
+        let t = event.target.getBoundingClientRect();
+        let b = document.body.getBoundingClientRect();
+        confetti({
+          origin: {
+            x: t.x / b.width,
+            y: t.y / b.height
+          },
+          disableForReducedMotion: true
+        });
+      }
     });
-  }
-});
   </script>
 </html>
