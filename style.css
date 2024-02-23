@@ -35,6 +35,7 @@ body {
 #edit {
   background-color: #666;
   border-radius: 0.75rem;
+  width: 25vw;
 }
 #edit div {
   display: flex;
