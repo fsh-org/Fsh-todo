@@ -33,6 +33,7 @@ body {
   resize: none;
 }
 #edit {
+  color: #fff;
   background-color: #666;
   border-radius: 0.75rem;
   width: 25vw;
