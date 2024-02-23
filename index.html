@@ -31,6 +31,14 @@
     <br>
     <textarea id="desc" placeholder="Description"></textarea>
     <div id="preview"></div>
+    <dialog id="edit">
+      <div>
+        <input id="title2" placeholder="Title">
+        <textarea id="desc2" placeholder="Description"></textarea>
+      </div>
+      <button onclick="this.parentElement.close()">Cancel</button>
+      <button onclick="save()">Save</button>
+    </dialog>
   </body>
   <script src="script.js"></script>
 </html>

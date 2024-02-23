@@ -14,6 +14,7 @@ body {
   background-color: #888;
   text-align: left;
   transition: 500ms;
+  display: flex;
 }
 .card:hover {
   background-color: #777;
@@ -29,5 +30,16 @@ body {
 #desc {
   width: 50%;
   max-width: 370px;
+  resize: none;
+}
+#edit {
+  background-color: #666;
+  border-radius: 0.75rem;
+}
+#edit div {
+  display: flex;
+  flex-direction: column;
+}
+textarea {
   resize: none;
 }
