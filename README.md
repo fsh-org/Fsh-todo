@@ -7,4 +7,4 @@ Simple todo web app
 - Editing your tasks
 - Multi tab sync
 
-![Image demostration](preview.png)
+![Image demostration](preview2.png)
