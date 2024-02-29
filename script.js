@@ -58,3 +58,5 @@ window.addEventListener("click", (event) => {
     });
   }
 });
+
+window.addEventListener("storage", (event) => {reload()});
