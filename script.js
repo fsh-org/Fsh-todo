@@ -3,7 +3,7 @@ function g(id) {
 }
 function reload() {
   let data = JSON.parse(localStorage.getItem('todo')) || [];
-  g('preview').innerHTML = data.map(r => `<div class="card" id="c-${r.id}"${!!document.getElementById('c-'+r.id) ? '' : ' style="animation-name: appear;animation-duration: 1s;animation-iteration-count: 1;"'}>
+  g('preview').innerHTML = data.map(r => `<div class="card" id="c-${r.id}"${document.getElementById('c-'+r.id) ? '' : ' style="animation-name: appear;animation-duration: 1s;animation-iteration-count: 1;"'}>
   <label class="container">
     <input type="checkbox" onchange="del(${r.id})">
     <span class="checkmark"></span>
@@ -62,4 +62,4 @@ window.addEventListener("click", (event) => {
   }
 });
 
-window.addEventListener("storage", (event) => {reload()});
+window.addEventListener("storage", ()=>{reload()});
