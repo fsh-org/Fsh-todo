@@ -4,6 +4,8 @@ body {
   margin: 0;
   padding: 0;
 }
+
+/* Cards */
 .card {
   width: 50%;
   margin-left: auto;
@@ -48,6 +50,16 @@ textarea {
 @keyframes appear {
   from {opacity: 0;}
   to {opacity: 1;}
+}
+
+/* Data menu */
+.data-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 10px 15px;
+  background-color: var(--bg-light);
+  border-radius: 0 1rem 0 0;
 }
 
 /* Custom cehckbox */
