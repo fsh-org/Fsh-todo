@@ -71,9 +71,13 @@ document.getElementById('upload').addEventListener("change", function(){
   reader.onload = (evt) => {
     let con = evt.target.result;
     try {
+      console.log('ff')
       let json = JSON.parse(con);
+      console.log('gg')
       if (!Array.isArray(json)) throw new Error('Not a array');
+      console.log('hh')
       localStorage.setItem('todo', con);
+      console.log('jj')
     } catch(err) {
       alert('Not a valid file')
     }
