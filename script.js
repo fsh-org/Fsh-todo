@@ -69,7 +69,14 @@ function file_i() {
 document.getElementById('upload').addEventListener("change", function(){
   const reader = new FileReader();
   reader.onload = (evt) => {
-    console.log('File load: '+evt.target.result);
+    let con = evt.target.result;
+    try {
+      let json = JSON.parse(con);
+      if (!Array.isArray(json)) throw new Error('Not a array');
+      localStorage.setItem('todo', con);
+    } catch(err) {
+      alert('Not a valid file')
+    }
   };
   reader.readAsText(this.files[0]);
 });
