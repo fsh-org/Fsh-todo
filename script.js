@@ -69,7 +69,7 @@ function file_i() {
 document.getElementById('upload').addEventListener("change", function(){
   const reader = new FileReader();
   reader.onload = (evt) => {
-    console.log(evt.target.result);
+    console.log('File load: '+evt.target.result);
   };
   reader.readAsText(this.files[0]);
 });
