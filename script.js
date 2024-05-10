@@ -12,7 +12,7 @@ function download(filename, text) {
 /* Show cards */
 function reload() {
   let data = JSON.parse(localStorage.getItem('todo')) || [];
-  document.getElementById('preview').innerHTML = data.map(r => `<div class="card" id="c-${r.id}"${document.getElementById('c-'+r.id) ? '' : ' style="animation-name: appear;animation-duration: 1s;animation-iteration-count: 1;"'}>
+  document.getElementById('preview').innerHTML = '<p>'+data.length+' tasks left</p>'+data.map(r => `<div class="card" id="c-${r.id}"${document.getElementById('c-'+r.id) ? '' : ' style="animation-name: appear;animation-duration: 1s;animation-iteration-count: 1;"'}>
   <label class="container">
     <input type="checkbox" onchange="del(${r.id})">
     <span class="checkmark"></span>
