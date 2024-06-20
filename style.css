@@ -13,13 +13,13 @@ body {
   margin-top: 10px;
   padding: 5px;
   border-radius: 0.25rem;
-  background-color: #444;
+  background-color: var(--bg-light);
   text-align: left;
   transition: 500ms;
   display: flex;
 }
 .card:hover {
-  background-color: #666;
+  background-color: var(--bg-dim);
 }
 #preview {
   transition: 500ms;
@@ -27,7 +27,7 @@ body {
 #title {
   display: inline-block;
   width: calc(50% - 66px);
-  max-width:300px;
+  max-width: 300px;
 }
 #desc {
   width: 50%;
@@ -35,9 +35,6 @@ body {
   resize: none;
 }
 #edit {
-  color: #fff;
-  background-color: #181818;
-  border-radius: 0.75rem;
   width: 25vw;
 }
 #edit div {
@@ -88,9 +85,10 @@ textarea {
   left: 5px;
   height: 20px;
   width: 20px;
-  background-color: #eee;
+  background-color: var(--text);
   border-radius: 0.25rem;
+  transition: 500ms;
 }
 .container:hover input ~ .checkmark {
-  background-color: #ccc;
+  background-color: var(--text-dim);
 }
