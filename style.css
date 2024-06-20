@@ -89,6 +89,6 @@ textarea {
   border-radius: 0.25rem;
   transition: 500ms;
 }
-.container:hover input ~ .checkmark {
+.card:hover input ~ .checkmark {
   background-color: var(--text-dim);
 }
