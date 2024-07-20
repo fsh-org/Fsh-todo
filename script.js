@@ -42,6 +42,7 @@ function save() {
   data[pos].title = document.getElementById('title2').value;
   data[pos].desc = document.getElementById('desc2').value;
   localStorage.setItem('todo', JSON.stringify(data))
+  document.getElementById('edit').close()
   reload()
 }
 /* Edit menu */
