@@ -44,6 +44,11 @@ body {
 textarea {
   resize: none;
 }
+.appear {
+  animation-name: appear;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+}
 @keyframes appear {
   from {opacity: 0;}
   to {opacity: 1;}
