@@ -14,7 +14,7 @@ function reload() {
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   document.getElementById('preview').innerHTML = `<p>${data.length} tasks left</p>
 <div style="display:none"></div>
-${data.map(r => `<div class="card" id="c-${r.id}"${document.getElementById('c-'+r.id) ? '' : ' clss="appear"'}>
+${data.map(r => `<div class="card" id="c-${r.id}"${document.getElementById('c-'+r.id) ? '' : ' class="appear"'}>
   <label class="container">
     <input type="checkbox" onchange="del(${r.id})">
     <span class="checkmark"></span>
