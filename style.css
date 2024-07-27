@@ -21,6 +21,11 @@ body {
 .card:hover {
   background-color: var(--bg-dim);
 }
+.card div {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
 #preview {
   transition: 500ms;
 }
