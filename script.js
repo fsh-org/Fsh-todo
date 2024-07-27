@@ -18,9 +18,11 @@ if (!localStorage.getItem('order')) {
 function reload() {
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   document.getElementById('preview').innerHTML = `<p>${data.length} tasks left</p>
-<div style="display:none">
-  ${localStorage.getItem('order') === 'newest' ? `<svg height="20" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 91.8996C123.982 86.7001 131.513 86.7001 134.617 91.8996L173.352 156.791C176.535 162.124 172.693 168.892 166.483 168.892H89.0123C82.802 168.892 78.96 162.124 82.143 156.791L120.878 91.8996Z"/></svg>` : `<svg height="20" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 164.992C123.982 170.192 131.513 170.192 134.617 164.992L173.352 100.1C176.535 94.7679 172.693 88 166.483 88H89.0123C82.802 88 78.96 94.7679 82.143 100.1L120.878 164.992Z"/></svg>`}
-  <p>${localStorage.getItem('order') === 'newest' ? 'Newest' : 'Oldest'}</p>
+<div style="display:none" class="order">
+  <div>
+    ${localStorage.getItem('order') === 'newest' ? `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 91.8996C123.982 86.7001 131.513 86.7001 134.617 91.8996L173.352 156.791C176.535 162.124 172.693 168.892 166.483 168.892H89.0123C82.802 168.892 78.96 162.124 82.143 156.791L120.878 91.8996Z"/></svg>` : `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 164.992C123.982 170.192 131.513 170.192 134.617 164.992L173.352 100.1C176.535 94.7679 172.693 88 166.483 88H89.0123C82.802 88 78.96 94.7679 82.143 100.1L120.878 164.992Z"/></svg>`}
+    <p>${localStorage.getItem('order') === 'newest' ? 'Newest' : 'Oldest'}</p>
+  </div>
 </div>
 ${data.map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
   <label class="container">
