@@ -73,9 +73,11 @@ textarea {
 }
 .order div {
   display: flex;
+  width: fit-content;
   background-color: var(--bg-light);
   padding: 2px 6px 2px 2px;
   border-radius: 0.5rem;
+  cursor: pointer;
 }
 
 /* Data menu */
