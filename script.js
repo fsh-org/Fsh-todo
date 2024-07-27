@@ -19,7 +19,7 @@ ${data.map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' a
     <input type="checkbox" onchange="del(${r.id})">
     <span class="checkmark"></span>
   </label>
-  <div><b>${r.title}</b><br>${r.desc.replace('\n','<br>')}</div>
+  <div><b>${r.title}</b>${r.desc.replace('\n','<br>')}</div>
   <svg xmlns="http://www.w3.org/2000/svg" onclick="edit(${r.id})" style="margin-bottom:auto;margin-top:auto;margin-right:8px;" height="25" viewBox="0 0 256 256"><path d="M68.8002 210.595C66.7796 211.225 64.7597 209.621 64.9155 207.51L67.5 172.5L102.215 200.179L68.8002 210.595Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M67.5 172.5L102.186 200.236L187.63 92.5929L152.687 65.0577L67.5 172.5ZM158.107 58.2214L193.067 85.744L203.882 72.1188C205.599 69.9553 205.237 66.8092 203.073 65.0928L176.041 43.6524C173.877 41.9362 170.731 42.2993 169.016 44.4634L158.107 58.2214Z"/></svg>
 </div>`).join('')}`;
 }
