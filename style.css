@@ -78,6 +78,10 @@ textarea {
   padding: 2px 6px 2px 2px;
   border-radius: 0.5rem;
   cursor: pointer;
+  transition: 500ms;
+}
+.order div:hover {
+  background-color: var(--bg-dim);
 }
 
 /* Data menu */
