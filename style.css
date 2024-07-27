@@ -64,6 +64,20 @@ textarea {
   }
 }
 
+/* Order */
+.order {
+  display: flex;
+  width: 50%;
+  margin-inline: auto;
+  justify-content: flex-end;
+}
+.order div {
+  display: flex;
+  background-color: var(--bg-light);
+  padding: 2px 6px 2px 2px;
+  border-radius: 0.5rem;
+}
+
 /* Data menu */
 .data-menu {
   position: fixed;
