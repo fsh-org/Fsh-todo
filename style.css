@@ -13,13 +13,13 @@ body {
   margin-top: 10px;
   padding: 5px;
   border-radius: 0.25rem;
-  background-color: var(--bg-light);
+  background-color: var(--bg-3);
   text-align: left;
   transition: 500ms;
   display: flex;
 }
 .card:hover {
-  background-color: var(--bg-dim);
+  background-color: var(--bg-2);
 }
 .card div {
   flex: 1;
@@ -67,21 +67,21 @@ textarea {
 /* Order */
 .order {
   display: flex;
-  width: 50%;
+  width: 51%;
   margin-inline: auto;
   justify-content: flex-end;
 }
 .order div {
   display: flex;
   width: fit-content;
-  background-color: var(--bg-light);
+  background-color: var(--bg-3);
   padding: 2px 6px 2px 2px;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: 500ms;
 }
 .order div:hover {
-  background-color: var(--bg-dim);
+  background-color: var(--bg-2);
 }
 
 /* Data menu */
@@ -90,7 +90,7 @@ textarea {
   bottom: 0;
   left: 0;
   padding: 10px 15px;
-  background-color: var(--bg-light);
+  background-color: var(--bg-3);
   border-radius: 0 1rem 0 0;
 }
 
@@ -120,10 +120,10 @@ textarea {
   left: 5px;
   height: 20px;
   width: 20px;
-  background-color: var(--text);
+  background-color: var(--text-1);
   border-radius: 0.25rem;
   transition: 500ms;
 }
 .card:hover input ~ .checkmark {
-  background-color: var(--text-dim);
+  background-color: var(--text-2);
 }
