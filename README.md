@@ -7,5 +7,6 @@ Simple todo web app
 - Confetti on completion as reward for completing tasks
 - Multi tab sync
 - Import/Export
+- Sorting
 
 ![Image preview of fsh todo](preview.png)
