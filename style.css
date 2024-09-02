@@ -87,11 +87,14 @@ textarea {
 /* Data menu */
 .data-menu {
   position: fixed;
-  bottom: 0;
   left: 0;
+  bottom: 0;
   padding: 10px 15px;
+  border: 5px var(--bg-1) solid;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0px 1rem 0px 0px;
   background-color: var(--bg-3);
-  border-radius: 0 1rem 0 0;
 }
 
 /* Custom cehckbox */
