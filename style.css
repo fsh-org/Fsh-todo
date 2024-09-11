@@ -66,10 +66,13 @@ textarea {
 /* Order */
 .order {
   display: flex;
-  justify-content: flex-end;
   width: 50%;
   margin-inline: auto;
   box-sizing: border-box;
+}
+.order p {
+  flex: 1;
+  text-align: left;
 }
 .order div {
   display: flex;
