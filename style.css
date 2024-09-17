@@ -66,6 +66,7 @@ textarea {
 /* Order */
 .order {
   display: flex;
+  align-items: center;
   width: 50%;
   margin-inline: auto;
   box-sizing: border-box;
