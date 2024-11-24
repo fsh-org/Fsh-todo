@@ -9,7 +9,7 @@ body {
 .card {
   display: flex;
   width: 50%;
-  margin: 10px auto 0px auto;
+  margin: 10px auto 0px;
   padding: 5px;
   text-align: left;
   border-radius: 0.25rem;
