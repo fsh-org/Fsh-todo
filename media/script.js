@@ -79,7 +79,7 @@ function reload() {
   </div>
   <button>+</button>
 </div>
-${tasks.spaces[space].map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
+${tasks.spaces[space].contents.map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
   <label class="container">
     <input type="checkbox" onchange="del(${r.id})">
     <span class="checkmark"></span>
@@ -129,7 +129,7 @@ function del(id) {/*
 }
 /* Data export/import */
 function file_e() {
-  download('tasks.ftodo', (localStorage.getItem('todo')||'[]'))
+  download('tasks.ftodo', JSON.stringify(tasks))
 }
 function file_i() {
   document.getElementById('upload').click();
