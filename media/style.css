@@ -63,12 +63,12 @@ textarea {
   }
 }
 
-/* Order */
-.order {
+/* Order / Spaces */
+.order, .spaces {
   display: flex;
   align-items: center;
   width: 50%;
-  margin-inline: auto;
+  margin: 2px auto;
   box-sizing: border-box;
 }
 .order p {
@@ -86,6 +86,14 @@ textarea {
 }
 .order div:hover {
   background-color: var(--bg-2);
+}
+
+.spaces > div {
+  flex: 1;
+}
+.spaces > div button {
+  border-radius: 0.2rem;
+  border-color: hsl(var(--color), 65%, 50%);
 }
 
 /* Data menu */
@@ -137,7 +145,7 @@ textarea {
 
 /* Mobile devices */
 @media (max-width: 700px) {
-  #desc, .card, .order {
+  #desc, .card, .order, .spaces {
     width: 90%;
   }
   #title {
