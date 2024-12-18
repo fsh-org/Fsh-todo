@@ -74,7 +74,7 @@ function reload() {
 <div class="spaces">
   <div>
     ${(localStorage.getItem('order') === 'newest' ? Object.keys(tasks.spaces).reverse() : Object.keys(tasks.spaces)).map(s=>{
-      return `<button style="--color:${tasks.spaces[s].name}">${tasks.spaces[s].name}</button>`;
+      return `<button style="--color:${tasks.spaces[s].color}">${tasks.spaces[s].name}</button>`;
     }).join('')}
   </div>
   <button>+</button>
