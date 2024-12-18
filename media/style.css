@@ -66,6 +66,7 @@ textarea {
 /* Order / Spaces */
 .order, .spaces {
   display: flex;
+  gap: 5px;
   align-items: center;
   width: 50%;
   margin: 2px auto;
@@ -88,9 +89,6 @@ textarea {
   background-color: var(--bg-2);
 }
 
-.spaces > div {
-  flex: 1;
-}
 .spaces > div button {
   border-radius: 0.2rem;
   border-color: hsl(var(--color), 65%, 50%);
