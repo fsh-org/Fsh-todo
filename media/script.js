@@ -8,10 +8,58 @@ function download(filename, text) {
   element.click();
   document.body.removeChild(element);
 }
+function updateDataVer(dat, num) {
+  if (num===1) {
+    return {
+      version: 2,
+      spaces: {
+        main: {
+          name: 'Main',
+          color: 230,
+          contents: dat.map(t=>{
+            t.type = 'simple';
+            return t;
+          })
+        }
+      }
+    }
+  } else if (num===2) {
+    return dat
+  } else {
+    throw new Error('Unknown version')
+  }
+}
 
 /* Settings */
 if (!localStorage.getItem('order')) {
   localStorage.setItem('order', 'newest')
+}
+if (!localStorage.getItem('todo')) {
+  localStorage.setItem('todo', JSON.stringify({
+    version: 2,
+    spaces: {
+      main: {
+        name: 'Main',
+        color: 230,
+        contents: dat.map(t=>{
+          t.type = 'simple';
+          return t;
+        })
+      }
+    }
+  }))
+}
+let tasks;
+try {
+  tasks = JSON.parse(localStorage.getItem('todo')) ?? [];
+} catch {
+  tasks = [];
+  alert('Could not load tasks');
+}
+if (Array.isArray(tasks) || !tasks.version) {
+  updateDataVer(tasks, 1);
+} else {
+  updateDataVer(tasks, tasks.version);
 }
 
 /* Show cards */
@@ -75,7 +123,7 @@ function del(id) {
 }
 /* Data export/import */
 function file_e() {
-  download('fsh-todo-tasks.json', (localStorage.getItem('todo')||'[]'))
+  download('tasks.ftodo', (localStorage.getItem('todo')||'[]'))
 }
 function file_i() {
   document.getElementById('upload').click();
