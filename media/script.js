@@ -18,13 +18,15 @@ function updateDataVer(dat, num) {
           color: 230,
           contents: dat.map(t=>{
             t.type = 'simple';
+            t.labels = [];
+            t.status = 'open';
             return t;
           })
         }
       }
     }
   } else if (num===2) {
-    return dat
+    return dat;
   } else {
     throw new Error('Unknown version')
   }
@@ -41,15 +43,13 @@ if (!localStorage.getItem('todo')) {
       main: {
         name: 'Main',
         color: 230,
-        contents: dat.map(t=>{
-          t.type = 'simple';
-          return t;
-        })
+        contents: []
       }
     }
   }))
 }
 let tasks;
+let space = 'main';
 try {
   tasks = JSON.parse(localStorage.getItem('todo')) ?? [];
 } catch {
@@ -57,23 +57,30 @@ try {
   alert('Could not load tasks');
 }
 if (Array.isArray(tasks) || !tasks.version) {
-  updateDataVer(tasks, 1);
+  tasks = updateDataVer(tasks, 1);
 } else {
-  updateDataVer(tasks, tasks.version);
+  tasks = updateDataVer(tasks, tasks.version);
 }
 
 /* Show cards */
 function reload() {
-  let data = JSON.parse(localStorage.getItem('todo')) || [];
   if (localStorage.getItem('order') === 'newest') data = data.reverse();
   document.getElementById('preview').innerHTML = `<div class="order">
-  <p>${data.length} task${data.length === 1 ? '' : 's'} left</p>
-  <div${data.length===0?' style="display:none"':''} onclick="localStorage.setItem('order', '${localStorage.getItem('order') === 'newest' ? 'oldest' : 'newest'}');reload()">
+  <p>${Object.values(tasks.spaces).map(s=>s.contents.filter(t=>t.status=='open').length).reduce()} total | ${tasks.spaces[space].contents.filter(t=>t.status=='open').length} in space</p>
+  <div onclick="localStorage.setItem('order', '${localStorage.getItem('order') === 'newest' ? 'oldest' : 'newest'}');reload()">
     ${localStorage.getItem('order') === 'newest' ? `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 91.8996C123.982 86.7001 131.513 86.7001 134.617 91.8996L173.352 156.791C176.535 162.124 172.693 168.892 166.483 168.892H89.0123C82.802 168.892 78.96 162.124 82.143 156.791L120.878 91.8996Z"/></svg>` : `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 164.992C123.982 170.192 131.513 170.192 134.617 164.992L173.352 100.1C176.535 94.7679 172.693 88 166.483 88H89.0123C82.802 88 78.96 94.7679 82.143 100.1L120.878 164.992Z"/></svg>`}
     <p>${localStorage.getItem('order') === 'newest' ? 'Newest' : 'Oldest'}</p>
   </div>
 </div>
-${data.map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
+<div class="spaces">
+  <div>
+    ${Object.keys(tasks.spaces).map(s=>{
+      return `<button style="--color:${tasks.spaces[s].name}">${tasks.spaces[s].name}</button>`;
+    }).join('')}
+  </div>
+  <button>+</button>
+</div>
+${tasks.spaces[space].map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
   <label class="container">
     <input type="checkbox" onchange="del(${r.id})">
     <span class="checkmark"></span>
@@ -83,7 +90,7 @@ ${data.map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' a
 </div>`).join('')}`;
 }
 /* Add card*/
-function add() {
+function add() {/*
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   data.push({
     title: document.getElementById('title').value,
@@ -93,33 +100,33 @@ function add() {
   document.getElementById('title').value = '';
   document.getElementById('desc').value = '';
   localStorage.setItem('todo', JSON.stringify(data))
-  reload()
+  reload()*/
 }
 /* Save card */
 let saven;
-function save() {
+function save() {/*
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   let pos = data.indexOf(data.filter(e => {return e.id == saven})[0]);
   data[pos].title = document.getElementById('title2').value;
   data[pos].desc = document.getElementById('desc2').value;
   localStorage.setItem('todo', JSON.stringify(data))
   document.getElementById('edit').close()
-  reload()
+  reload()*/
 }
 /* Edit menu */
-function edit(id) {
+function edit(id) {/*
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   saven = id;
   document.getElementById('title2').value = data.filter(e => {return e.id == id})[0].title;
   document.getElementById('desc2').value = data.filter(e => {return e.id == id})[0].desc;
-  document.getElementById('edit').showModal()
+  document.getElementById('edit').showModal()*/
 }
 /* Delete card */
-function del(id) {
+function del(id) {/*
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   data = data.filter(e => e.id != id);
   localStorage.setItem('todo', JSON.stringify(data))
-  reload()
+  reload()*/
 }
 /* Data export/import */
 function file_e() {
@@ -128,7 +135,7 @@ function file_e() {
 function file_i() {
   document.getElementById('upload').click();
 }
-document.getElementById('upload').addEventListener("change", function(){
+document.getElementById('upload').addEventListener("change", function(){/*
   const reader = new FileReader();
   reader.onload = (evt) => {
     let con = evt.target.result;
@@ -141,7 +148,7 @@ document.getElementById('upload').addEventListener("change", function(){
       alert('Not a valid file')
     }
   };
-  reader.readAsText(this.files[0]);
+  reader.readAsText(this.files[0]);*/
 });
 
 /* Show cards at load and when data changes ( for cross tab changes )*/
