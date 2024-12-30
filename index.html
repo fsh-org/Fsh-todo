@@ -27,11 +27,45 @@
       </table>
     </a>
     <h2 style="margin-top:-20px">ToDo</h2>
-    <input id="title" placeholder="Title">
-    <button onclick="add()">Add <svg xmlns="http://www.w3.org/2000/svg" style="display:inline-block;margin-bottom:-5px;" width="20" height="20" viewBox="0 0 256 256"><path d="M16 144C7.16344 144 0 136.837 0 128C0 119.163 7.16344 112 16 112H240C248.837 112 256 119.163 256 128C256 136.837 248.837 144 240 144H16Z"/><path d="M112 16C112 7.16344 119.163 0 128 0C136.837 0 144 7.16344 144 16V240C144 248.837 136.837 256 128 256C119.163 256 112 248.837 112 240V16Z"/></svg></button>
-    <br>
-    <textarea id="desc" placeholder="Description"></textarea>
-    <div id="preview"></div>
+    <dialog id="space_add">
+      <button onclick="this.parentElement.close()" class="modal-close">x</button>
+      <p>Create a new space</p>
+      <label>Name: <input placeholder="Space name" maxlength="25" id="space_add_name"></label>
+      <div class="hsl-selector" id="hsl-selector">
+        <div class="hsl-selector-indicator" id="hsl-selector-indicator"></div>
+      </div>
+      <button onclick="space_create()">Create</button>
+      <script>
+        let hs = document.getElementById('hsl-selector');
+        let hsi = document.getElementById('hsl-selector-indicator');
+        let hsd = false;
+
+        function updateColor(event) {
+          const rect = hs.getBoundingClientRect();
+          const p = Math.min(Math.max((event.clientX-rect.left)/rect.width, 0), 1);
+
+          hsi.style.left = `${Math.min(Math.max(Math.round(rect.width*p), 10), Math.floor(rect.width)-15)}px`;
+          hsi.style.borderColor = `hsl(${Math.round(p*360)}, 65%, 50%)`;
+          hs.setAttribute('value', Math.round(p*360))
+        }
+
+        hs.addEventListener('mousedown', (event) => {
+          hsd = true;
+          updateColor(event);
+        });
+        window.addEventListener('mouseup', () => {
+          hsd = false;
+        });
+        window.addEventListener('mousemove', (event) => {
+          if (hsd) {
+            updateColor(event);
+          }
+        });
+        hs.addEventListener('click', (event) => {
+          updateColor(event);
+        });
+      </script>
+    </dialog>
     <dialog id="edit">
       <h1>Editing task</h1>
       <div>
@@ -41,6 +75,13 @@
       <button onclick="this.parentElement.close()">Cancel</button>
       <button onclick="save()">Save</button>
     </dialog>
+    <input id="title" placeholder="Title">
+    <button onclick="task_add()" class="task-add">Add <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>
+    <br>
+    <textarea id="desc" placeholder="Description"></textarea>
+    <div id="spaces"></div>
+    <div id="toolbar"></div>
+    <div id="tasks"></div>
     <div class="data-menu">
       <button onclick="file_e()" aria-label="export data"><svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 256 256"><path d="M150 36.8284C150 35.0466 152.154 34.1543 153.414 35.4142L198.586 80.5858C199.846 81.8457 198.953 84 197.172 84H160C154.477 84 150 79.5228 150 74V36.8284Z"/><path d="M247.536 157.536C249.488 155.583 249.488 152.417 247.536 150.464L215.716 118.645C213.763 116.692 210.597 116.692 208.645 118.645C206.692 120.597 206.692 123.763 208.645 125.716L236.929 154L208.645 182.284C206.692 184.237 206.692 187.403 208.645 189.355C210.597 191.308 213.763 191.308 215.716 189.355L247.536 157.536ZM202 159H244V149H202V159Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M54 47C54 38.7157 60.7157 32 69 32H137C139.761 32 142 34.2386 142 37V77C142 85.2843 148.716 92 157 92H197C199.761 92 202 94.2386 202 97V149H148C145.239 149 143 151.239 143 154C143 156.761 145.239 159 148 159H202V209C202 217.284 195.284 224 187 224H69C60.7157 224 54 217.284 54 209V47Z"/></svg></button>
       <button onclick="file_i()" aria-label="import data"><svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 256 256"><path d="M150 36.8284C150 35.0466 152.154 34.1543 153.414 35.4142L198.586 80.5858C199.846 81.8457 198.953 84 197.172 84H160C154.477 84 150 79.5228 150 74V36.8284Z"/><path d="M244 159C246.761 159 249 156.761 249 154C249 151.239 246.761 149 244 149V159ZM202 159H244V149H202V159Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M54 47C54 38.7157 60.7157 32 69 32H137C139.761 32 142 34.2386 142 37V77C142 85.2843 148.716 92 157 92H197C199.761 92 202 94.2386 202 97V149H160.071L183.355 125.716C185.308 123.763 185.308 120.597 183.355 118.645C181.403 116.692 178.237 116.692 176.284 118.645L144.464 150.464C142.512 152.417 142.512 155.583 144.464 157.536L176.284 189.355C178.237 191.308 181.403 191.308 183.355 189.355C185.308 187.403 185.308 184.237 183.355 182.284L160.071 159H202V209C202 217.284 195.284 224 187 224H69C60.7157 224 54 217.284 54 209V47Z"/></svg></button>

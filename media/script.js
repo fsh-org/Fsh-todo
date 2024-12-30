@@ -31,75 +31,127 @@ function updateDataVer(dat, num) {
     throw new Error('Unknown version')
   }
 }
+function getLocalData() {
+  // Load localStorage object
+  let dat = localStorage.getItem('todo');
+  // If doesn't exist set default
+  if (!dat) {
+    setLocalData({
+      version: 2,
+      spaces: {
+        main: {
+          name: 'Main',
+          color: 230,
+          contents: []
+        }
+      }
+    });
+    return;
+  }
+  // Parse
+  try {
+    dat = JSON.parse(dat);
+  } catch(err) {
+    dat = [];
+    alert('Could not load tasks');
+  }
+  // Update version
+  if (Array.isArray(dat) || !dat.version) {
+    dat = updateDataVer(dat, 1);
+  } else {
+    dat = updateDataVer(dat, dat.version);
+  }
+  // Save
+  setLocalData(dat);
+}
+function setLocalData(dat) {
+  tasks = dat;
+  localStorage.setItem('todo', JSON.stringify(dat));
+  reload();
+}
+function nameNormalize(name) {
+  return name.toLowerCase().replaceAll(/( |\t|-)/g, '_');
+}
 
 /* Settings */
 if (!localStorage.getItem('order')) {
   localStorage.setItem('order', 'newest')
 }
-if (!localStorage.getItem('todo')) {
-  localStorage.setItem('todo', JSON.stringify({
-    version: 2,
-    spaces: {
-      main: {
-        name: 'Main',
-        color: 230,
-        contents: []
-      }
-    }
-  }))
-}
-let tasks;
+var tasks;
 let space = 'main';
-try {
-  tasks = JSON.parse(localStorage.getItem('todo')) ?? [];
-} catch {
-  tasks = [];
-  alert('Could not load tasks');
+getLocalData();
+
+/* Interactions */
+function space_add() {
+  document.getElementById('space_add').showModal();
 }
-if (Array.isArray(tasks) || !tasks.version) {
-  tasks = updateDataVer(tasks, 1);
-} else {
-  tasks = updateDataVer(tasks, tasks.version);
+function space_create() {
+  let name = document.getElementById('space_add_name').value;
+  let norm = nameNormalize(name);
+  if (tasks.spaces[norm]) {
+    alert('A space with a similar name alredy exists');
+    return;
+  }
+  let color = document.getElementById('hsl-selector').getAttribute('value');
+  color = Number(color??0);
+  tasks.spaces[norm] = {
+    name,
+    color,
+    contents: []
+  };
+  document.getElementById('space_add').close();
+  reload();
 }
 
-/* Show cards */
+/* Show tasks */
 function reload() {
-  document.getElementById('preview').innerHTML = `<div class="order">
-  <p>${Object.values(tasks.spaces).map(s=>s.contents.filter(t=>t.status=='open').length).reduce((sum, a) => sum + a, 0)} total | ${tasks.spaces[space].contents.filter(t=>t.status=='open').length} in space</p>
-  <div onclick="localStorage.setItem('order', '${localStorage.getItem('order') === 'newest' ? 'oldest' : 'newest'}');reload()">
-    ${localStorage.getItem('order') === 'newest' ? `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 91.8996C123.982 86.7001 131.513 86.7001 134.617 91.8996L173.352 156.791C176.535 162.124 172.693 168.892 166.483 168.892H89.0123C82.802 168.892 78.96 162.124 82.143 156.791L120.878 91.8996Z"/></svg>` : `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 164.992C123.982 170.192 131.513 170.192 134.617 164.992L173.352 100.1C176.535 94.7679 172.693 88 166.483 88H89.0123C82.802 88 78.96 94.7679 82.143 100.1L120.878 164.992Z"/></svg>`}
-    <p>${localStorage.getItem('order') === 'newest' ? 'Newest' : 'Oldest'}</p>
-  </div>
-</div>
-<div class="spaces">
-  <div>
-    ${(localStorage.getItem('order') === 'newest' ? Object.keys(tasks.spaces).reverse() : Object.keys(tasks.spaces)).map(s=>{
-      return `<button style="--color:${tasks.spaces[s].color}">${tasks.spaces[s].name}</button>`;
-    }).join('')}
-  </div>
-  <button>+</button>
-</div>
-${tasks.spaces[space].contents.map(r => `<div class="card${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
+  // Spaces
+  document.getElementById('spaces').innerHTML = Object.keys(tasks.spaces).map(s=>{
+  return `<button style="--color:${tasks.spaces[s].color}${s===space?';background:hsl(var(--color), 65%, 50%);':''}" onclick="space='${s}';reload();">${tasks.spaces[s].name}</button>`;
+}).join('') + `<button onclick="space_add()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>`;
+
+  // Toolbar
+  document.getElementById('toolbar').innerHTML = `<div class="open-tasks">${tasks.spaces[space].contents.filter(t=>t.status=='open').length}/${tasks.spaces[space].contents.length} Open tasks</div>
+<div class="total-tasks">${tasks.spaces[space].contents.filter(t=>t.status=='open').length}/${tasks.spaces[space].contents.length} Total open tasks</div>
+<span></span>
+<button onclick="localStorage.setItem('order', '${localStorage.getItem('order') === 'newest' ? 'oldest' : 'newest'}');reload()">
+  ${localStorage.getItem('order') === 'newest' ? `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M120.878 91.8996C123.982 86.7001 131.513 86.7001 134.617 91.8996L173.352 156.791C176.535 162.124 172.693 168.892 166.483 168.892H89.0123C82.802 168.892 78.96 162.124 82.143 156.791L120.878 91.8996Z"/></svg>` : `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 164.992C123.982 170.192 131.513 170.192 134.617 164.992L173.352 100.1C176.535 94.7679 172.693 88 166.483 88H89.0123C82.802 88 78.96 94.7679 82.143 100.1L120.878 164.992Z"/></svg>`}
+  <p>${localStorage.getItem('order') === 'newest' ? 'Newest' : 'Oldest'}</p>
+</button>`;
+
+  let cont = structuredClone(tasks.spaces[space].contents);
+  if (localStorage.getItem('order') === 'newest') {
+    cont.reverse()
+  }
+  // Tasks
+  document.getElementById('tasks').innerHTML = cont.map(r => `<div class="task${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
   <label class="container">
-    <input type="checkbox" onchange="del(${r.id})">
+    <input type="checkbox" onchange="task_del(${r.id})" autocomplete="off" name="check">
     <span class="checkmark"></span>
   </label>
   <div><b>${r.title}</b>${r.desc.replaceAll('\n','<br>')}</div>
   <svg xmlns="http://www.w3.org/2000/svg" onclick="edit(${r.id})" style="margin-bottom:auto;margin-top:auto;margin-right:8px;cursor:pointer;" height="25" viewBox="0 0 256 256"><path d="M68.8002 210.595C66.7796 211.225 64.7597 209.621 64.9155 207.51L67.5 172.5L102.215 200.179L68.8002 210.595Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M67.5 172.5L102.186 200.236L187.63 92.5929L152.687 65.0577L67.5 172.5ZM158.107 58.2214L193.067 85.744L203.882 72.1188C205.599 69.9553 205.237 66.8092 203.073 65.0928L176.041 43.6524C173.877 41.9362 170.731 42.2993 169.016 44.4634L158.107 58.2214Z"/></svg>
-</div>`).join('')}`;
+</div>`).join('');
 }
-/* Add card*/
-function add() {/*
-  let data = JSON.parse(localStorage.getItem('todo')) || [];
-  data.push({
+
+/* Add task */
+function task_add() {
+  tasks.spaces[space].contents.push({
+    id: Math.floor(Math.random()*1000000),
+    type: 'simple',
+    labels: [],
+    status: 'open',
     title: document.getElementById('title').value,
-    desc: document.getElementById('desc').value,
-    id: Math.floor(Math.random()*1000000)
-  })
+    desc: document.getElementById('desc').value
+  });
   document.getElementById('title').value = '';
   document.getElementById('desc').value = '';
-  localStorage.setItem('todo', JSON.stringify(data))
-  reload()*/
+  setLocalData(tasks);
+}
+/* Delete task */
+function task_del(id) {
+  tasks.spaces[space].contents = tasks.spaces[space].contents.filter(t=>t.id!==id)
+  setLocalData(tasks);
 }
 /* Save card */
 let saven;
@@ -119,13 +171,6 @@ function edit(id) {/*
   document.getElementById('title2').value = data.filter(e => {return e.id == id})[0].title;
   document.getElementById('desc2').value = data.filter(e => {return e.id == id})[0].desc;
   document.getElementById('edit').showModal()*/
-}
-/* Delete card */
-function del(id) {/*
-  let data = JSON.parse(localStorage.getItem('todo')) || [];
-  data = data.filter(e => e.id != id);
-  localStorage.setItem('todo', JSON.stringify(data))
-  reload()*/
 }
 /* Data export/import */
 function file_e() {

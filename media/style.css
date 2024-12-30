@@ -1,33 +1,64 @@
 body {
-  text-align: center;
   height: 100vh;
-  margin: 0;
-  padding: 0;
+  height: 100dvh;
+  text-align: center;
+}
+textarea {
+  resize: none;
 }
 
-/* Cards */
-.card {
+/* Tasks */
+.task {
   display: flex;
   width: 50%;
   margin: 10px auto 0px;
   padding: 5px;
   text-align: left;
   border-radius: 0.25rem;
-  background-color: var(--bg-3);
+  background-color: var(--bg-2);
   transition: 500ms;
   box-sizing: border-box;
 }
-.card:hover {
-  background-color: var(--bg-2);
+.task:hover {
+  background-color: var(--bg-3);
 }
-.card div {
+.task div {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-#preview {
-  transition: 500ms;
+
+/* Menus */
+.modal-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+}
+
+.hsl-selector {
+  height: 25px;
+  border-radius: 2rem;
+  background: linear-gradient(to left in hsl longer hue, hsl(0, 65%, 50%) 0%, hsl(365, 65%, 50%) 100%);
+}
+.hsl-selector-indicator {
+  width: 25px;
+  height: 25px;
+  outline: 2px var(--text-1) solid;
+  border: 5px hsl(0, 65%, 50%) solid;
+  border-radius: 2rem;
+  box-sizing: border-box;
+  position: absolute;
+  left: 10px;
+}
+
+.task-add > svg {
+  display: inline-block;
+  margin-bottom: -5px;
 }
 #title {
   display: inline-block;
@@ -46,9 +77,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-textarea {
-  resize: none;
-}
 .appear {
   animation-name: appear;
   animation-duration: 1s;
@@ -63,8 +91,8 @@ textarea {
   }
 }
 
-/* Order / Spaces */
-.order, .spaces {
+/* Toolbar / Spaces */
+#toolbar, #spaces {
   display: flex;
   gap: 5px;
   align-items: center;
@@ -72,26 +100,51 @@ textarea {
   margin: 2px auto;
   box-sizing: border-box;
 }
-.order p {
-  flex: 1;
-  text-align: left;
-}
-.order div {
+#toolbar div, #toolbar button {
   display: flex;
+  align-items: center;
   width: fit-content;
-  background-color: var(--bg-3);
+  color: var(--text-1);
   padding: 2px 6px 2px 2px;
+  border: none;
   border-radius: 0.5rem;
-  cursor: pointer;
+  background-color: var(--bg-2);
   transition: 500ms;
 }
-.order div:hover {
-  background-color: var(--bg-2);
+#toolbar button:hover {
+  background-color: var(--bg-3);
+}
+#toolbar button svg {
+  fill: var(--text-1);
+}
+#toolbar span {
+  flex: 1;
+}
+.total-tasks {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 250ms;
+}
+.open-tasks:hover + .total-tasks {
+  pointer-events: auto;
+  opacity: 1;
 }
 
-.spaces > div button {
+#spaces {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+#spaces button:has(svg) {
+  padding: 0px;
+  border: none;
+}
+#spaces button {
   border-radius: 0.2rem;
   border-color: hsl(var(--color), 65%, 50%);
+}
+#spaces button:hover {
+  background-color: hsl(var(--color), 65%, 50%);
 }
 
 /* Data menu */
@@ -143,7 +196,7 @@ textarea {
 
 /* Mobile devices */
 @media (max-width: 700px) {
-  #desc, .card, .order, .spaces {
+  #desc, .card, #tool, #spaces {
     width: 90%;
   }
   #title {
