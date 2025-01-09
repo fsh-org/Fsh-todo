@@ -19,7 +19,7 @@ function updateDataVer(dat, num) {
           contents: dat.map(t=>{
             t.type = 'simple';
             t.labels = [];
-            t.status = 'open';
+            t.open = true;
             return t;
           })
         }
@@ -111,22 +111,24 @@ function reload() {
 }).join('') + `<button onclick="space_add()"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>`;
 
   // Toolbar
-  document.getElementById('toolbar').innerHTML = `<div class="open-tasks">${tasks.spaces[space].contents.filter(t=>t.status=='open').length}/${tasks.spaces[space].contents.length} Open tasks</div>
-<div class="total-tasks">${tasks.spaces[space].contents.filter(t=>t.status=='open').length}/${tasks.spaces[space].contents.length} Total open tasks</div>
+  let currentSpaceContents = tasks.spaces[space].contents;
+  document.getElementById('toolbar').innerHTML = `<div class="open-tasks">${currentSpaceContents.filter(t=>t.open).length}/${currentSpaceContents.length} Open tasks</div>
+<div class="total-tasks">${Object.values(tasks.spaces).map(e=>e.contents.filter(t=>t.open)).flat().length}/${Object.values(tasks.spaces).map(e=>e.contents).flat().length} Total open tasks</div>
 <span></span>
 <button onclick="localStorage.setItem('order', '${localStorage.getItem('order') === 'newest' ? 'oldest' : 'newest'}');reload()">
   ${localStorage.getItem('order') === 'newest' ? `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M120.878 91.8996C123.982 86.7001 131.513 86.7001 134.617 91.8996L173.352 156.791C176.535 162.124 172.693 168.892 166.483 168.892H89.0123C82.802 168.892 78.96 162.124 82.143 156.791L120.878 91.8996Z"/></svg>` : `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 164.992C123.982 170.192 131.513 170.192 134.617 164.992L173.352 100.1C176.535 94.7679 172.693 88 166.483 88H89.0123C82.802 88 78.96 94.7679 82.143 100.1L120.878 164.992Z"/></svg>`}
   <p>${localStorage.getItem('order') === 'newest' ? 'Newest' : 'Oldest'}</p>
 </button>`;
 
+  // Tasks
   let cont = structuredClone(tasks.spaces[space].contents);
   if (localStorage.getItem('order') === 'newest') {
     cont.reverse()
   }
-  // Tasks
-  document.getElementById('tasks').innerHTML = cont.map(r => `<div class="task${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}">
+  cont.sort((a,b)=>b.open-a.open);
+  document.getElementById('tasks').innerHTML = cont.map(r => `<div class="task${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}" data-open="${r.open}">
   <label class="container">
-    <input type="checkbox" onchange="task_del(${r.id})" autocomplete="off" name="check">
+    <input type="checkbox" onchange="task_sta(${r.id})" autocomplete="off" name="check"${r.open?'':' checked'}>
     <span class="checkmark"></span>
   </label>
   <div><b>${r.title}</b>${r.desc.replaceAll('\n','<br>')}</div>
@@ -140,7 +142,7 @@ function task_add() {
     id: Math.floor(Math.random()*1000000),
     type: 'simple',
     labels: [],
-    status: 'open',
+    open: true,
     title: document.getElementById('title').value,
     desc: document.getElementById('desc').value
   });
@@ -149,12 +151,13 @@ function task_add() {
   setLocalData(tasks);
 }
 /* Delete task */
-function task_del(id) {
-  tasks.spaces[space].contents = tasks.spaces[space].contents.filter(t=>t.id!==id)
+function task_sta(id) {
+  let elem = tasks.spaces[space].contents.find(t=>t.id==id);
+  elem.open = !elem.open;
   setLocalData(tasks);
 }
 /* Save card */
-let saven;
+//let saven;
 function save() {/*
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   let pos = data.indexOf(data.filter(e => {return e.id == saven})[0]);
@@ -165,7 +168,8 @@ function save() {/*
   reload()*/
 }
 /* Edit menu */
-function edit(id) {/*
+function edit(id) {
+  document.querySelector(`#c-${id} div`)/*
   let data = JSON.parse(localStorage.getItem('todo')) || [];
   saven = id;
   document.getElementById('title2').value = data.filter(e => {return e.id == id})[0].title;
@@ -173,35 +177,28 @@ function edit(id) {/*
   document.getElementById('edit').showModal()*/
 }
 /* Data export/import */
-function file_e() {
+function file_exp() {
   download('tasks.ftodo', JSON.stringify(tasks))
 }
-function file_i() {
+function file_imp() {
   document.getElementById('upload').click();
 }
-document.getElementById('upload').addEventListener("change", function(){/*
+document.getElementById('file_upload').addEventListener("change", function(){
   const reader = new FileReader();
   reader.onload = (evt) => {
-    let con = evt.target.result;
-    try {
-      let json = JSON.parse(con);
-      if (!Array.isArray(json)) throw new Error('Not a array');
-      localStorage.setItem('todo', con);
-      reload()
-    } catch(err) {
-      alert('Not a valid file')
-    }
+    localStorage.setItem('todo', evt.target.result);
+    getLocalData();
   };
-  reader.readAsText(this.files[0]);*/
+  reader.readAsText(this.files[0]);
 });
 
-/* Show cards at load and when data changes ( for cross tab changes )*/
-reload()
+/* Show cards at load and when data changes (for cross tab changes) */
+reload();
 window.addEventListener("storage", ()=>{reload()});
 
 /* Confetti */
 window.addEventListener("click", (event) => {
-  if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox') {
+  if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox' && !event.target.checked) {
     let t = event.target.getBoundingClientRect();
     let b = document.body.getBoundingClientRect();
     confetti({
