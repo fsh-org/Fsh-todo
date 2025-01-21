@@ -102,20 +102,34 @@ body {
   gap: 5px;
   flex-wrap: wrap;
 }
-#spaces button:has(svg) {
+#spaces button.add {
   padding: 0px;
   border: none;
 }
-#spaces button svg {
+#spaces button.add svg {
+  width: 16px;
   fill: var(--text-1);
   stroke: var(--text-1);
 }
 #spaces button {
+  display: flex;
+  align-items: center;
   border-radius: 0.2rem;
   border-color: hsl(var(--color), 65%, 50%);
 }
-#spaces button:hover {
+#spaces button:hover, #spaces button[selected] {
+  color: var(--bg-1);
   background-color: hsl(var(--color), 65%, 50%);
+}
+#spaces button[selected] svg {
+  fill: var(--bg-1);
+  stroke: var(--bg-1);
+}
+#spaces button svg {
+  width: 0px;
+}
+#spaces button:hover svg {
+  width: 15px;
 }
 
 /* Data menu */
@@ -129,6 +143,11 @@ body {
   border-bottom: none;
   border-radius: 0px 1rem 0px 0px;
   background-color: var(--bg-3);
+}
+.data-menu button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Tasks */
@@ -171,12 +190,20 @@ body {
 }
 
 /* Editing */
-#edit {
-  width: 25vw;
+.task input, .task textarea {
+  width: 100%;
+  margin: 0px;
+  resize: vertical;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
 }
-#edit div {
-  display: flex;
-  flex-direction: column;
+.task svg {
+  margin: auto 8px;
+  cursor: pointer;
+  opacity: 0;
+}
+.task:hover svg {
+  opacity: 1;
 }
 
 /* Custom cehckbox */
@@ -211,7 +238,7 @@ body {
   background-color: var(--text-2);
 }
 .task input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: var(--blue-1);
 }
 
 .checkmark:after {
@@ -228,7 +255,7 @@ body {
   top: 3px;
   width: 5px;
   height: 10px;
-  border: solid white;
+  border: solid var(--text-1);
   border-width: 0px 3px 3px 0px;
   transform: rotate(45deg);
 }
