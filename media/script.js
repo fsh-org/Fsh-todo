@@ -125,6 +125,7 @@ function space_act() {
     color,
     contents: cont
   };
+  space = norm;
   document.getElementById('space_add').close();
   document.getElementById('space_add_name').value = '';
   document.getElementById('hsl-selector').setAttribute('value', 0);
@@ -144,9 +145,7 @@ function space_del() {
 /* Show tasks */
 function reload() {
   if (Object.keys(tasks.spaces).length<1) {
-    document.getElementById('spaces').innerHTML = Object.keys(tasks.spaces).map(s=>{
-      return `<button style="--color:${tasks.spaces[s].color}"${s===space?' selected':''} onclick="space='${s}';reload();">${tasks.spaces[s].name}<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" onclick="space_edi('${s}')" viewBox="0 0 256 256"><path d="M35.1323 255.15C33.0948 255.784 31.0651 254.148 31.252 252.023L36 198L87.0001 239L35.1323 255.15Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M36 198L87 239L213.98 78.9254L162.073 38.0231L36 198ZM170.11 27.8256L222.067 68.7302L239.674 46.5338C241.391 44.3703 241.028 41.2251 238.864 39.509L194.819 4.57489C192.651 2.85513 189.498 3.22383 187.785 5.39749L170.11 27.8256Z"/></svg></button>`;
-    }).join('') + `<button onclick="space_add()" class="add"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>`;
+    document.getElementById('spaces').innerHTML = `<button onclick="space_add()" class="add" aria-label="Create space">Create a space&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>`;
     document.getElementById('toolbar').innerHTML = '';
     document.getElementById('tasks').innerHTML = '';
     return;
@@ -154,7 +153,13 @@ function reload() {
   // Spaces
   document.getElementById('spaces').innerHTML = Object.keys(tasks.spaces).map(s=>{
   return `<button style="--color:${tasks.spaces[s].color}"${s===space?' selected':''} onclick="space='${s}';reload();">${tasks.spaces[s].name}<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" onclick="space_edi('${s}')" viewBox="0 0 256 256"><path d="M35.1323 255.15C33.0948 255.784 31.0651 254.148 31.252 252.023L36 198L87.0001 239L35.1323 255.15Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M36 198L87 239L213.98 78.9254L162.073 38.0231L36 198ZM170.11 27.8256L222.067 68.7302L239.674 46.5338C241.391 44.3703 241.028 41.2251 238.864 39.509L194.819 4.57489C192.651 2.85513 189.498 3.22383 187.785 5.39749L170.11 27.8256Z"/></svg></button>`;
-}).join('') + `<button onclick="space_add()" class="add"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>`;
+}).join('') + `<button onclick="space_add()" class="add" aria-label="Create space"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>`;
+
+  if (!tasks.spaces[space]) {
+    document.getElementById('toolbar').innerHTML = 'Select space';
+    document.getElementById('tasks').innerHTML = '';
+    return;
+  }
 
   // Toolbar
   let currentSpaceContents = tasks.spaces[space].contents;

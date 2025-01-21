@@ -103,8 +103,10 @@ body {
   flex-wrap: wrap;
 }
 #spaces button.add {
+  color: var(--text-1);
   padding: 0px;
   border: none;
+  background: none;
 }
 #spaces button.add svg {
   width: 16px;
@@ -117,7 +119,7 @@ body {
   border-radius: 0.2rem;
   border-color: hsl(var(--color), 65%, 50%);
 }
-#spaces button:hover, #spaces button[selected] {
+#spaces button:hover:not(.add), #spaces button[selected] {
   color: var(--bg-1);
   background-color: hsl(var(--color), 65%, 50%);
 }
@@ -262,10 +264,13 @@ body {
 
 /* Mobile devices */
 @media (max-width: 700px) {
-  #desc, .task, #tool, #spaces {
+  .task, #tool, #spaces {
     width: 90%;
   }
   #title {
-    width: calc(90% - 66px);
+    width: calc(90% - 65px);
+  }
+  #desc {
+    width: calc(90% + 4px);
   }
 }
