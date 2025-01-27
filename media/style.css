@@ -1,53 +1,181 @@
 body {
-  text-align: center;
   height: 100vh;
-  margin: 0;
-  padding: 0;
+  height: 100dvh;
+  text-align: center;
 }
 
-/* Cards */
-.card {
+.modal-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+}
+
+/* Color selector */
+.hsl-selector {
+  height: 25px;
+  border-radius: 2rem;
+  background: linear-gradient(to left in hsl longer hue, hsl(0, 65%, 50%) 0%, hsl(365, 65%, 50%) 100%);
+}
+.hsl-selector-indicator {
+  width: 25px;
+  height: 25px;
+  outline: 2px var(--text-1) solid;
+  border: 5px hsl(0, 65%, 50%) solid;
+  border-radius: 2rem;
+  box-sizing: border-box;
+  position: absolute;
+  left: 10px;
+}
+
+/* Add taks area*/
+#title {
+  width: calc(25% - 65px);
+  height: 30px;
+  margin: 0px;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+.task-add {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 30px;
+  margin: 0px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+#desc {
+  width: calc(25% + 4px);
+  margin: 4px 0px;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  resize: none;
+}
+
+/* Toolbar / Spaces */
+#toolbar, #spaces {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  width: 50%;
+  margin: 2px auto;
+  box-sizing: border-box;
+}
+#toolbar div, #toolbar button {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  color: var(--text-1);
+  padding: 2px 6px 2px 2px;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--bg-2);
+  transition: 500ms;
+}
+#toolbar button:hover {
+  background-color: var(--bg-3);
+}
+#toolbar button svg {
+  fill: var(--text-1);
+}
+#toolbar span {
+  flex: 1;
+}
+.total-tasks {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 250ms;
+}
+.open-tasks:hover + .total-tasks {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+#spaces {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+#spaces button.add {
+  color: var(--text-1);
+  padding: 0px;
+  border: none;
+  background: none;
+}
+#spaces button.add svg {
+  width: 16px;
+  fill: var(--text-1);
+  stroke: var(--text-1);
+}
+#spaces button {
+  display: flex;
+  align-items: center;
+  border-radius: 0.2rem;
+  border-color: hsl(var(--color), 65%, 50%);
+}
+#spaces button:hover:not(.add), #spaces button[selected] {
+  color: var(--bg-1);
+  background-color: hsl(var(--color), 65%, 50%);
+}
+#spaces button[selected] svg {
+  fill: var(--bg-1);
+  stroke: var(--bg-1);
+}
+#spaces button svg {
+  width: 0px;
+}
+#spaces button:hover svg {
+  width: 15px;
+}
+
+/* Data menu */
+.data-menu {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 10px 15px;
+  border: 5px var(--bg-1) solid;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0px 1rem 0px 0px;
+  background-color: var(--bg-3);
+}
+.data-menu button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tasks */
+.task {
   display: flex;
   width: 50%;
   margin: 10px auto 0px;
   padding: 5px;
   text-align: left;
   border-radius: 0.25rem;
-  background-color: var(--bg-3);
+  background-color: var(--bg-2);
   transition: 500ms;
   box-sizing: border-box;
 }
-.card:hover {
-  background-color: var(--bg-2);
+.task:hover {
+  background-color: var(--bg-3);
 }
-.card div {
+.task div {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-#preview {
-  transition: 500ms;
-}
-#title {
-  display: inline-block;
-  width: calc(50% - 66px);
-  max-width: 300px;
-}
-#desc {
-  width: 50%;
-  max-width: 370px;
-  resize: none;
-}
-#edit {
-  width: 25vw;
-}
-#edit div {
-  display: flex;
-  flex-direction: column;
-}
-textarea {
-  resize: none;
+[data-open="false"] {
+  filter: brightness(0.8);
+  text-decoration: line-through;
 }
 .appear {
   animation-name: appear;
@@ -63,42 +191,21 @@ textarea {
   }
 }
 
-/* Order */
-.order {
-  display: flex;
-  align-items: center;
-  width: 50%;
-  margin-inline: auto;
+/* Editing */
+.task input, .task textarea {
+  width: 100%;
+  margin: 0px;
+  resize: vertical;
+  border-radius: 0.5rem;
   box-sizing: border-box;
 }
-.order p {
-  flex: 1;
-  text-align: left;
-}
-.order div {
-  display: flex;
-  width: fit-content;
-  background-color: var(--bg-3);
-  padding: 2px 6px 2px 2px;
-  border-radius: 0.5rem;
+.task svg {
+  margin: auto 8px;
   cursor: pointer;
-  transition: 500ms;
+  opacity: 0;
 }
-.order div:hover {
-  background-color: var(--bg-2);
-}
-
-/* Data menu */
-.data-menu {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  padding: 10px 15px;
-  border: 5px var(--bg-1) solid;
-  border-left: none;
-  border-bottom: none;
-  border-radius: 0px 1rem 0px 0px;
-  background-color: var(--bg-3);
+.task:hover svg {
+  opacity: 1;
 }
 
 /* Custom cehckbox */
@@ -108,39 +215,62 @@ textarea {
   padding-left: 35px;
   cursor: pointer;
   font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 .container input {
   position: absolute;
   opacity: 0;
   cursor: pointer;
-  height: 0;
-  width: 0;
+  height: 0px;
+  width: 0px;
 }
 .checkmark {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
   left: 5px;
   height: 20px;
   width: 20px;
-  background-color: var(--text-1);
+  transform: translateY(-50%);
   border-radius: 0.25rem;
+  background-color: var(--text-1);
   transition: 500ms;
 }
-.card:hover input ~ .checkmark {
+
+.task:hover input ~ .checkmark {
   background-color: var(--text-2);
+}
+.task input:checked ~ .checkmark {
+  background-color: var(--blue-1);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container .checkmark:after {
+  left: 6px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--text-1);
+  border-width: 0px 3px 3px 0px;
+  transform: rotate(45deg);
 }
 
 /* Mobile devices */
 @media (max-width: 700px) {
-  #desc, .card, .order {
+  .task, #tool, #spaces {
     width: 90%;
   }
   #title {
-    width: calc(90% - 66px);
+    width: calc(90% - 65px);
+  }
+  #desc {
+    width: calc(90% + 4px);
   }
 }

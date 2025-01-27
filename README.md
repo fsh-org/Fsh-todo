@@ -2,11 +2,12 @@
 Simple todo web app
 
 ## Features
-- Adding tasks with a title and description
-- Editing tasks
-- Confetti on completion as reward for completing tasks
+- Tasks (Title and description)
+- Editing, Closing and Reopening of tasks
+- Confetti on completion of tasks
+- Multiple spaces
 - Multi tab sync
 - Import/Export
 - Sorting
 
-![Image preview of fsh todo](preview.png)
+![Image preview of fsh todo](media/preview.png)
