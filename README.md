@@ -10,4 +10,4 @@ Simple todo web app
 - Import/Export
 - Sorting
 
-![Image preview of fsh todo](preview.png)
+![Image preview of fsh todo](media/preview.png)
