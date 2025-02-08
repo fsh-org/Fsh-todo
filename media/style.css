@@ -264,13 +264,19 @@ body {
 
 /* Mobile devices */
 @media (max-width: 700px) {
-  .task, #tool, #spaces {
+  .task, #tool, #toolbar, #spaces {
     width: 90%;
+  }
+  #spaces button svg {
+    width: 15px;
   }
   #title {
     width: calc(90% - 65px);
   }
   #desc {
     width: calc(90% + 4px);
+  }
+  .task svg {
+    opacity: 1;
   }
 }
