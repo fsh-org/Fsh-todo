@@ -190,6 +190,11 @@ function reload() {
 </div>`).join('');
 }
 
+/* Modify size of task creation textarea */
+document.getElementById('desc').oninput = function(event){
+  event.target.setAttribute('rows', Math.max(event.target.value.split('\n').length, 2));
+};
+
 /* Add task */
 function task_add() {
   tasks.spaces[space].contents.push({
