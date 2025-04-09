@@ -31,9 +31,32 @@ body {
   left: 10px;
 }
 
-/* Add taks area*/
+/* Add tasks area*/
+.creation {
+  position: relative;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  align-items: end;
+  width: 30%;
+  margin-inline: auto;
+}
+.creation select {
+  position: absolute;
+  top: 35px;
+  right: 0px;
+  margin: 5px 5px 0px 0px;
+  padding: 0px 0px 5px 5px;
+  border: none;
+  outline: none;
+  border-radius: 0px;
+  font-size: 80%;
+  font-family: Lexend;
+  font-weight: bold;
+  background: var(--bg-1);
+}
 #title {
-  width: calc(25% - 65px);
+  width: 100%;
   height: 30px;
   margin: 0px;
   border-radius: 0.5rem;
@@ -51,8 +74,8 @@ body {
   box-sizing: border-box;
 }
 #desc {
-  width: calc(25% + 4px);
-  margin: 4px 0px;
+  width: 100%;
+  margin: 0px;
   border-radius: 0.5rem;
   box-sizing: border-box;
   resize: none;
@@ -167,11 +190,15 @@ body {
 .task:hover {
   background-color: var(--bg-3);
 }
-.task div {
+.task > div {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.task > div > span {
+  white-space: break-spaces;
+  word-break: break-word;
 }
 [data-open="false"] {
   filter: brightness(0.8);
@@ -262,19 +289,40 @@ body {
   transform: rotate(45deg);
 }
 
+/* MD */
+blockquote {
+  position: relative;
+  margin: 0px;
+  padding-left: 6px;
+}
+blockquote::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  display: block;
+  height: 100%;
+  width: 4px;
+  border-radius: 1rem;
+  background: var(--bg-4);
+}
+code {
+  padding: 2px;
+  border-radius: 0.25rem;
+  background: var(--bg-0);
+}
+
 /* Mobile devices */
 @media (max-width: 700px) {
+  .creation {
+    width: 90%;
+  }
   .task, #tool, #toolbar, #spaces {
     width: 90%;
   }
   #spaces button svg {
     width: 15px;
-  }
-  #title {
-    width: calc(90% - 65px);
-  }
-  #desc {
-    width: calc(90% + 4px);
   }
   .task svg {
     opacity: 1;

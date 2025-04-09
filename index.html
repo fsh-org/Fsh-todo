@@ -13,6 +13,7 @@
     <meta property="og:image" content="https://fsh.plus/fsh.png"/>
     <meta name="theme-color" content="#a89c9b">
     <!-- ------------------ -->
+    <script src="https://account.fsh.plus/script.js"></script>
     <link rel="stylesheet" href="./media/style.css">
     <link rel="manifest" href="./media/install.json">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
@@ -36,41 +37,17 @@
       </div>
       <button onclick="space_del()" id="space_del_button" style="display:none">Delete</button>
       <button onclick="space_act()" id="space_add_button">Create</button>
-      <script>
-        let hs = document.getElementById('hsl-selector');
-        let hsi = document.getElementById('hsl-selector-indicator');
-        let hsd = false;
-
-        function updateColor(event) {
-          const rect = hs.getBoundingClientRect();
-          const p = Math.min(Math.max((event.clientX-rect.left)/rect.width, 0), 1);
-
-          hsi.style.left = `${Math.min(Math.max(Math.round(rect.width*p), 10), Math.floor(rect.width)-15)}px`;
-          hsi.style.borderColor = `hsl(${Math.round(p*360)}, 65%, 50%)`;
-          hs.setAttribute('value', Math.round(p*360))
-        }
-
-        hs.addEventListener('mousedown', (event) => {
-          hsd = true;
-          updateColor(event);
-        });
-        window.addEventListener('mouseup', () => {
-          hsd = false;
-        });
-        window.addEventListener('mousemove', (event) => {
-          if (hsd) {
-            updateColor(event);
-          }
-        });
-        hs.addEventListener('click', (event) => {
-          updateColor(event);
-        });
-      </script>
+      <script src="./media/hsl-selector.js" defer></script>
     </dialog>
-    <input id="title" placeholder="Title">
-    <button onclick="task_add()" class="task-add">Add <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>
-    <br>
-    <textarea id="desc" placeholder="Description"></textarea>
+    <div class="creation">
+      <input id="title" placeholder="Title">
+      <textarea id="desc" placeholder="Description"></textarea>
+      <select id="type">
+        <option value="simple">Simple</option>
+        <option value="md">Markdown</option>
+      </select>
+      <button onclick="task_add()" class="task-add">Add <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256"><rect x="103" width="50" height="256" rx="25"></rect><rect y="103" width="256" height="50" rx="25"></rect></svg></button>
+    </div>
     <div id="spaces"></div>
     <div id="toolbar"></div>
     <div id="tasks"></div>
@@ -79,6 +56,7 @@
       <button onclick="file_imp()" aria-label="import data"><svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 256 256"><path d="M129 14.6569C129 11.0932 133.309 9.30857 135.828 11.8284L189.172 65.1716C191.691 67.6914 189.907 72 186.343 72H139C133.477 72 129 67.5228 129 62V14.6569Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M183.571 117.072C179.666 113.166 173.334 113.166 169.429 117.072L134.196 152.304C132.312 154.123 131.14 156.675 131.14 159.5C131.14 159.585 131.141 159.668 131.143 159.752C131.17 162.275 132.146 164.791 134.071 166.716L169.426 202.072C173.332 205.977 179.663 205.977 183.569 202.072C187.474 198.166 187.474 191.835 183.569 187.929L165.14 169.5H245.64C251.162 169.5 255.64 165.023 255.64 159.5C255.64 153.978 251.162 149.5 245.64 149.5H165.284L183.571 131.214C187.476 127.308 187.476 120.977 183.571 117.072Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.6665 23.8998C5.6665 13.2465 14.3027 4.61035 24.956 4.61035H106.831C113.459 4.61035 118.831 9.98294 118.831 16.6104V62.4788C118.831 73.1321 127.468 81.7683 138.121 81.7683H183.989C190.617 81.7683 195.989 87.1409 195.989 93.7683V142H182.578L188.562 135.865C195.408 128.847 195.408 117.468 188.562 110.45C181.716 103.432 170.616 103.432 163.77 110.45L128.333 146.777C121.487 153.795 121.487 165.174 128.333 172.193C128.872 172.745 129.437 173.254 130.024 173.719L163.087 207.612C169.888 214.585 180.916 214.585 187.717 207.612C194.519 200.64 194.519 189.335 187.717 182.362L182.486 177H195.989V232.226C195.989 242.88 187.353 251.516 176.7 251.516H24.956C14.3027 251.516 5.6665 242.88 5.6665 232.226V23.8998Z"/></svg></button>
       <input type="file" id="file_upload" style="display:none" accept=".ftodo,.json">
     </div>
+    <script src="./media/mdparse.js" type="module"></script>
     <script src="./media/script.js"></script>
   </body>
 </html>
