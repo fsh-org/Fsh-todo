@@ -231,7 +231,7 @@ body {
   cursor: pointer;
   opacity: 0;
 }
-.task:hover svg {
+.task:hover svg, .task:has(textarea) svg {
   opacity: 1;
 }
 
