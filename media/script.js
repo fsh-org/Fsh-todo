@@ -262,10 +262,10 @@ document.getElementById('file_upload').addEventListener("change", function(){
 
 /* Show cards at load and when data changes (for cross tab changes) */
 reload();
-window.addEventListener("storage", ()=>{reload()});
+window.addEventListener('storage', ()=>{reload()});
 
 /* Confetti */
-window.addEventListener("click", (event) => {
+window.addEventListener('click', (event) => {
   if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox' && event.target.checked) {
     let t = event.target.getBoundingClientRect();
     let b = document.body.getBoundingClientRect();
@@ -274,6 +274,7 @@ window.addEventListener("click", (event) => {
         x: t.x / b.width,
         y: t.y / b.height
       },
+      shapes: ['circle', 'square', 'star'],
       disableForReducedMotion: true
     });
   }
