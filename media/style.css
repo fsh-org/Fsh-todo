@@ -3,6 +3,9 @@ body {
   height: 100dvh;
   text-align: center;
 }
+textarea {
+  resize: none;
+}
 
 .modal-close {
   position: absolute;
@@ -78,7 +81,6 @@ body {
   margin: 0px;
   border-radius: 0.5rem;
   box-sizing: border-box;
-  resize: none;
 }
 
 /* Toolbar / Spaces */
@@ -222,7 +224,6 @@ body {
 .task input, .task textarea {
   width: 100%;
   margin: 0px;
-  resize: vertical;
   border-radius: 0.5rem;
   box-sizing: border-box;
 }
@@ -261,6 +262,10 @@ body {
   border-radius: 0.25rem;
   background-color: var(--text-1);
   transition: 500ms;
+}
+input[type="checkbox"][disabled] + .checkmark {
+  cursor: not-allowed;
+  filter: brightness(0.5);
 }
 
 .task:hover input ~ .checkmark {

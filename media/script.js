@@ -74,9 +74,7 @@ function nameNormalize(name) {
 }
 
 /* Settings */
-if (!localStorage.getItem('order')) {
-  localStorage.setItem('order', 'newest')
-}
+if (!localStorage.getItem('order')) localStorage.setItem('order', 'newest');
 var tasks;
 let space = 'main';
 getLocalData();
@@ -173,9 +171,7 @@ function reload() {
 
   // Tasks
   let cont = structuredClone(tasks.spaces[space].contents);
-  if (localStorage.getItem('order') === 'newest') {
-    cont.reverse()
-  }
+  if (localStorage.getItem('order') === 'newest') cont.reverse();
   cont.sort((a,b)=>b.open-a.open);
   document.getElementById('tasks').innerHTML = cont.map(r => `<div class="task${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}" data-open="${r.open}">
   <label class="container">
@@ -197,8 +193,8 @@ function reload() {
 }
 
 /* Modify size of task creation textarea */
-document.getElementById('desc').oninput = function(event){
-  event.target.setAttribute('rows', Math.min(Math.max(event.target.value.split('\n').length, 2), 10));
+document.getElementById('desc').oninput = (evt)=>{
+  evt.target.setAttribute('rows', Math.min(Math.max(evt.target.value.split('\n').length, 2), 10));
 };
 
 /* Add task */
@@ -213,6 +209,7 @@ function task_add() {
   });
   document.getElementById('title').value = '';
   document.getElementById('desc').value = '';
+  document.getElementById('desc').oninput();
   setLocalData(tasks);
 }
 /* Status change task */
@@ -230,15 +227,17 @@ function task_del(id) {
 function task_edi(id) {
   let task = document.querySelector(`#c-${id}`);
   let data = tasks.spaces[space].contents.find(t=>t.id===id);
+  task.querySelector('input[type="checkbox"]').disabled = true;
   task.querySelector('div > b').innerHTML = `<input value="${data.title}">`;
   task.querySelector('div > span').innerHTML = `<textarea>${data.desc}</textarea>`;
   let textarea = task.querySelector('div > span > textarea');
   textarea.setAttribute('rows', Math.min(Math.max(textarea.value.split('\n').length, 2), 10));
-  textarea.oninput = function(){
+  textarea.oninput = ()=>{
     textarea.setAttribute('rows', Math.min(Math.max(textarea.value.split('\n').length, 2), 10));
   };
   task.querySelector('svg').innerHTML = `<rect x="125" y="10" width="32" height="70" rx="8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20 0C8.95431 0 0 8.95431 0 20V236C0 247.046 8.95431 256 20 256H236C247.046 256 256 247.046 256 236V128V72.2843C256 66.9799 253.893 61.8929 250.142 58.1421L197.858 5.85786C194.107 2.10714 189.02 0 183.716 0H180C174.477 0 170 4.47715 170 10V80C170 85.5229 165.523 90 160 90H65C59.4772 90 55 85.5229 55 80V20C55 8.95431 46.0457 0 35 0H20ZM62 160C50.9543 160 42 168.954 42 180V215C42 226.046 50.9543 235 62 235H194C205.046 235 214 226.046 214 215V180C214 168.954 205.046 160 194 160H62Z"/>`;
-  task.querySelector('svg').onclick = function(){
+  task.querySelector('svg').onclick = ()=>{
+    task.querySelector('input[type="checkbox"]').disabled = false;
     data.title = task.querySelector('div > b input').value;
     data.desc = task.querySelector('div > span textarea').value;
     setLocalData(tasks);
@@ -251,7 +250,7 @@ function file_exp() {
 function file_imp() {
   document.getElementById('file_upload').click();
 }
-document.getElementById('file_upload').addEventListener("change", function(){
+document.getElementById('file_upload').addEventListener('change', ()=>{
   const reader = new FileReader();
   reader.onload = (evt) => {
     localStorage.setItem('todo', evt.target.result);
