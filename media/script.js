@@ -193,8 +193,10 @@ function reload() {
 }
 
 /* Modify size of task creation textarea */
-document.getElementById('desc').oninput = (evt)=>{
-  evt.target.setAttribute('rows', Math.min(Math.max(evt.target.value.split('\n').length, 2), 10));
+const TitleInput = document.getElementById('title');
+const DescTextarea = document.getElementById('desc');
+DescTextarea.oninput = ()=>{
+  DescTextarea.setAttribute('rows', Math.min(Math.max(DescTextarea.value.split('\n').length, 2), 10));
 };
 
 /* Add task */
@@ -204,12 +206,12 @@ function task_add() {
     open: true,
     type: document.getElementById('type').value,
     labels: [],
-    title: document.getElementById('title').value,
-    desc: document.getElementById('desc').value
+    title: TitleInput.value,
+    desc: DescTextarea.value
   });
-  document.getElementById('title').value = '';
-  document.getElementById('desc').value = '';
-  document.getElementById('desc').oninput();
+  TitleInput.value = '';
+  DescTextarea.value = '';
+  DescTextarea.oninput();
   setLocalData(tasks);
 }
 /* Status change task */
