@@ -198,7 +198,7 @@ textarea {
   flex-direction: column;
   justify-content: center;
 }
-.task > div > span {
+.task > div > span, .task > div > b {
   white-space: break-spaces;
   word-break: break-word;
 }
