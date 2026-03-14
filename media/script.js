@@ -164,14 +164,24 @@ function reload() {
   document.getElementById('toolbar').innerHTML = `<div class="open-tasks">${currentSpaceContents.filter(t=>t.open).length}/${currentSpaceContents.length} Open tasks</div>
 <div class="total-tasks">${Object.values(tasks.spaces).map(e=>e.contents.filter(t=>t.open)).flat().length}/${Object.values(tasks.spaces).map(e=>e.contents).flat().length} Total open tasks</div>
 <span></span>
-<button onclick="localStorage.setItem('order', '${localStorage.getItem('order') === 'newest' ? 'oldest' : 'newest'}');reload()">
-  ${localStorage.getItem('order') === 'newest' ? `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M120.878 91.8996C123.982 86.7001 131.513 86.7001 134.617 91.8996L173.352 156.791C176.535 162.124 172.693 168.892 166.483 168.892H89.0123C82.802 168.892 78.96 162.124 82.143 156.791L120.878 91.8996Z"/></svg>` : `<svg height="25" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><!--Fsh icons--><path d="M120.878 164.992C123.982 170.192 131.513 170.192 134.617 164.992L173.352 100.1C176.535 94.7679 172.693 88 166.483 88H89.0123C82.802 88 78.96 94.7679 82.143 100.1L120.878 164.992Z"/></svg>`}
-  <p>${localStorage.getItem('order') === 'newest' ? 'Newest' : 'Oldest'}</p>
+<button onclick="localStorage.setItem('order', '${{newest:'oldest',oldest:'az',az:'za',za:'newest'}[localStorage.getItem('order')]}');reload()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><path d="M8.86307 31.6022C5.13517 26.3016 8.92652 19 15.4068 19H240.593C247.073 19 250.865 26.3016 247.137 31.6022L160 155.5L134.544 191.696C131.357 196.226 124.643 196.226 121.456 191.696L96 155.5L8.86307 31.6022Z"/><path d="M95 123C95 118.582 98.5817 115 103 115H153C157.418 115 161 118.582 161 123V229.767C161 232.681 157.983 234.617 155.333 233.403L98.5001 207.354C96.3674 206.377 95 204.246 95 201.9V123Z"/></svg>
+  <p>${{newest:'Newest',oldest:'Oldest',az:'A to Z',za:'Z to A'}[localStorage.getItem('order')]}</p>
 </button>`;
 
   // Tasks
   let cont = structuredClone(tasks.spaces[space].contents);
-  if (localStorage.getItem('order') === 'newest') cont.reverse();
+  switch (localStorage.getItem('order')) {
+    case 'newest':
+      cont.reverse();
+      break;
+    case 'az':
+      cont.sort((a,b)=>a.title!==b.title?a.title.localeCompare(b.title):a.desc.localeCompare(b.desc));
+      break;
+    case 'za':
+      cont.sort((a,b)=>b.title!==a.title?b.title.localeCompare(a.title):b.desc.localeCompare(a.desc));
+      break;
+  }
   cont.sort((a,b)=>b.open-a.open);
   document.getElementById('tasks').innerHTML = cont.map(r => `<div class="task${document.getElementById('c-'+r.id) ? '' : ' appear'}" id="c-${r.id}" data-open="${r.open}">
   <label class="container">
