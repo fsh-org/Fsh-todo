@@ -1,6 +1,5 @@
 let hs = document.getElementById('hsl-selector');
 let hsi = document.getElementById('hsl-selector-indicator');
-let hsd = false;
 
 function updateColor(event) {
   const rect = hs.getBoundingClientRect();
@@ -11,18 +10,21 @@ function updateColor(event) {
   hs.setAttribute('value', Math.round(p*360))
 }
 
-hs.addEventListener('mousedown', (event) => {
-  hsd = true;
+let pointers = [];
+hs.onpointerdown = (event) => {
+  hs.setPointerCapture(event.pointerId);
+  pointers.push(event.pointerId);
   updateColor(event);
-});
-window.addEventListener('mouseup', () => {
-  hsd = false;
-});
-window.addEventListener('mousemove', (event) => {
-  if (hsd) {
-    updateColor(event);
-  }
-});
-hs.addEventListener('click', (event) => {
+};
+hs.onpointerup = hs.onpointercancel = (event) => {
+  if (!pointers.includes(event.pointerId)) return;
+  pointers = pointers.filter(pt=>pt!==event.pointerId);
+  hs.releasePointerCapture(event.pointerId);
+};
+hs.onpointermove = (event) => {
+  if (!pointers.includes(event.pointerId)) return;
   updateColor(event);
-});
+};
+hs.onclick = (event) => {
+  updateColor(event);
+};
