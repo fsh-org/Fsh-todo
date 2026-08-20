@@ -24,12 +24,11 @@ function updateDataVer(dat, num) {
           })
         }
       }
-    }
+    };
   } else if (num===2) {
     return dat;
-  } else {
-    throw new Error('Unknown version')
   }
+  throw new Error('Unknown version');
 }
 function getLocalData() {
   // Load localStorage object
@@ -162,7 +161,7 @@ function reload() {
   // Toolbar
   let currentSpaceContents = tasks.spaces[space].contents;
   document.getElementById('toolbar').innerHTML = `<div class="open-tasks">${currentSpaceContents.filter(t=>t.open).length}/${currentSpaceContents.length} Open tasks</div>
-<div class="total-tasks">${Object.values(tasks.spaces).map(e=>e.contents.filter(t=>t.open)).flat().length}/${Object.values(tasks.spaces).map(e=>e.contents).flat().length} Total open tasks</div>
+${Object.values(tasks.spaces).length===1?'':`<div class="total-tasks">${Object.values(tasks.spaces).map(e=>e.contents.filter(t=>t.open)).flat().length}/${Object.values(tasks.spaces).map(e=>e.contents).flat().length} Total open tasks</div>`}
 <span></span>
 <button onclick="localStorage.setItem('order', '${{newest:'oldest',oldest:'az',az:'za',za:'newest'}[localStorage.getItem('order')]}');reload()">
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 256 256"><path d="M8.86307 31.6022C5.13517 26.3016 8.92652 19 15.4068 19H240.593C247.073 19 250.865 26.3016 247.137 31.6022L160 155.5L134.544 191.696C131.357 196.226 124.643 196.226 121.456 191.696L96 155.5L8.86307 31.6022Z"/><path d="M95 123C95 118.582 98.5817 115 103 115H153C157.418 115 161 118.582 161 123V229.767C161 232.681 157.983 234.617 155.333 233.403L98.5001 207.354C96.3674 206.377 95 204.246 95 201.9V123Z"/></svg>
