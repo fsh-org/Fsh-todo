@@ -1,5 +1,4 @@
 body {
-  height: 100vh;
   height: 100dvh;
   text-align: center;
 }
@@ -36,27 +35,11 @@ textarea {
 
 /* Add tasks area*/
 .creation {
-  position: relative;
   display: flex;
   gap: 5px;
   flex-direction: column;
-  align-items: end;
   width: 30%;
   margin-inline: auto;
-}
-.creation select {
-  position: absolute;
-  top: 35px;
-  right: 0px;
-  margin: 5px 5px 0px 0px;
-  padding: 0px 0px 5px 5px;
-  border: none;
-  outline: none;
-  border-radius: 0px;
-  font-size: 80%;
-  font-family: Lexend;
-  font-weight: bold;
-  background: var(--bg-1);
 }
 #title {
   width: 100%;
@@ -65,21 +48,22 @@ textarea {
   border-radius: 0.5rem;
   box-sizing: border-box;
 }
-.task-add {
-  display: inline-flex;
-  gap: 5px;
-  align-items: center;
-  justify-content: center;
-  width: 65px;
-  height: 30px;
-  margin: 0px;
-  padding: 5px;
-  box-sizing: border-box;
-}
 #desc {
   width: 100%;
   margin: 0px;
   border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+.creation > div {
+  display: flex;
+}
+.creation > div > button {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  margin: 0px;
+  padding: 5px;
   box-sizing: border-box;
 }
 
@@ -202,7 +186,14 @@ textarea {
   white-space: break-spaces;
   word-break: break-word;
 }
-[data-open="false"] {
+.task .clock {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-size: 80%;
+  color: var(--text-2);
+}
+[data-open="false"] > div > *:not(.clock) {
   filter: brightness(0.8);
   text-decoration: line-through;
 }
@@ -227,12 +218,12 @@ textarea {
   border-radius: 0.5rem;
   box-sizing: border-box;
 }
-.task svg {
+.task > svg {
   margin: auto 8px;
   cursor: pointer;
   opacity: 0;
 }
-.task:hover svg, .task:has(textarea) svg {
+.task:hover > svg, .task:has(textarea) > svg {
   opacity: 1;
 }
 

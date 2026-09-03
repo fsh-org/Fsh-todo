@@ -1,16 +1,26 @@
 /* Utility functions */
+const dateFormats = {
+  t: { timeStyle: 'short' },
+  T: { timeStyle: 'medium' },
+  d: { day: '2-digit', month: '2-digit', year: 'numeric' },
+  D: { dateStyle: 'long' },
+  f: { dateStyle: 'long', timeStyle: 'short' },
+  F: { dateStyle: 'full', timeStyle: 'short' },
+  s: { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' },
+  S: { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }
+};
 function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-  element.style.display = 'none';
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
+  let link = document.createElement('a');
+  link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  link.setAttribute('download', filename);
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
 }
 function updateDataVer(dat, num) {
   if (num===1) {
-    return {
+    return updateDataVer({
       version: 2,
       spaces: {
         main: {
@@ -24,8 +34,22 @@ function updateDataVer(dat, num) {
           })
         }
       }
-    };
+    }, 2);
   } else if (num===2) {
+    dat.version = 3;
+    Object.keys(dat.spaces)
+      .forEach(key=>{
+        dat.spaces[key].contents = dat.spaces[key].contents.map(task=>{
+          task.type = 'simple';
+          task.body = task.desc;
+          delete task.desc;
+          task.attachments = [];
+          task.time = null;
+          return task;
+        });
+      });
+    return dat;
+  } else if (num===3) {
     return dat;
   }
   throw new Error('Unknown version');
@@ -36,7 +60,7 @@ function getLocalData() {
   // If doesn't exist set default
   if (!dat) {
     setLocalData({
-      version: 2,
+      version: 3,
       spaces: {
         main: {
           name: 'Main',
@@ -69,7 +93,7 @@ function setLocalData(dat) {
   reload();
 }
 function nameNormalize(name) {
-  return name.toLowerCase().replaceAll(/( |\t|-)/g, '_');
+  return name.trim().toLowerCase().replaceAll(/( |\t|-)/g, '_');
 }
 
 /* Settings */
@@ -99,23 +123,24 @@ function space_edi(id) {
   document.getElementById('hsl-selector-indicator').style.left = `${Math.min(Math.max(Math.round(rect.width*(space.color/360)), 10), Math.floor(rect.width)-15)}px`;
 }
 function space_act() {
-  let name = document.getElementById('space_add_name').value;
+  let name = document.getElementById('space_add_name').value.trim();
   let norm = nameNormalize(name);
   if (norm.length<1) {
     alert('You must type something for the name');
     return;
   }
-  if (tasks.spaces[norm]) {
-    if (!confirm('A space with a this name alredy exists, are you sure?')) return;
+  let oname = nameNormalize(document.getElementById('space_add_text').innerText.split('"').slice(1,-1).join('"'));
+  if (tasks.spaces[norm]&&norm!==oname) {
+    alert('Space with this name already exists');
+    return;
   }
   let color = document.getElementById('hsl-selector').getAttribute('value');
   color = Number(color??0);
   let cont = [];
   if (document.getElementById('space_add_button').innerText === 'Edit') {
-    let oname = nameNormalize(document.getElementById('space_add_text').innerText.split('"').slice(1,-1).join('"'));
     cont = tasks.spaces[oname].contents;
     delete tasks.spaces[oname];
-    if (space === oname) space = name;
+    if (space === oname) space = norm;
   }
   tasks.spaces[norm] = {
     name,
@@ -175,10 +200,10 @@ ${Object.values(tasks.spaces).length===1?'':`<div class="total-tasks">${Object.v
       cont.reverse();
       break;
     case 'az':
-      cont.sort((a,b)=>a.title!==b.title?a.title.localeCompare(b.title):a.desc.localeCompare(b.desc));
+      cont.sort((a,b)=>a.title!==b.title?a.title.localeCompare(b.title):a.body.localeCompare(b.body));
       break;
     case 'za':
-      cont.sort((a,b)=>b.title!==a.title?b.title.localeCompare(a.title):b.desc.localeCompare(a.desc));
+      cont.sort((a,b)=>b.title!==a.title?b.title.localeCompare(a.title):b.body.localeCompare(a.body));
       break;
   }
   cont.sort((a,b)=>b.open-a.open);
@@ -189,10 +214,11 @@ ${Object.values(tasks.spaces).length===1?'':`<div class="total-tasks">${Object.v
   </label>
   <div>
     <b>${r.title}</b>
-    <span>${r.type==='md' ?
-      MDParse(r.desc) :
-      r.desc
-    }</span>
+    <span>${MDParse(r.body)}</span>
+    ${r.time?`<span class="clock">
+  <svg width="16" height="16" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M128 0.000488281C198.692 0.000488281 256 57.308 256 128C255.999 198.693 198.692 256 128 256C57.3076 256 1.97489e-05 198.693 -0.000244141 128C-0.000244141 57.3081 57.3074 0.000620227 128 0.000488281ZM128 38.3999C78.5152 38.4 38.4001 78.5159 38.4001 128C38.4004 177.485 78.5153 217.6 128 217.6C177.484 217.6 217.6 177.485 217.6 128C217.6 78.5158 177.484 38.3999 128 38.3999ZM128 49.2593C134.075 49.2593 138.999 54.1844 139 60.2593V121.094L174.802 138.418C180.27 141.065 182.558 147.643 179.912 153.112C177.266 158.58 170.688 160.868 165.219 158.222L123.53 138.049C122.736 137.696 121.992 137.253 121.311 136.73C121.3 136.722 121.29 136.713 121.279 136.705C121.154 136.608 121.03 136.509 120.909 136.407C120.867 136.371 120.826 136.334 120.784 136.297C120.703 136.227 120.621 136.156 120.542 136.083C120.47 136.016 120.4 135.949 120.33 135.881C120.276 135.829 120.222 135.777 120.17 135.724C120.095 135.649 120.024 135.572 119.952 135.495C119.901 135.44 119.849 135.385 119.799 135.329C119.732 135.254 119.667 135.178 119.602 135.102C119.555 135.046 119.508 134.99 119.462 134.933C119.395 134.851 119.33 134.768 119.265 134.684C119.221 134.626 119.176 134.567 119.133 134.508C119.073 134.428 119.016 134.345 118.959 134.263C118.914 134.199 118.869 134.133 118.826 134.068C118.775 133.99 118.725 133.912 118.676 133.833C118.629 133.76 118.583 133.686 118.539 133.611C118.493 133.533 118.449 133.455 118.405 133.376C118.363 133.301 118.32 133.226 118.28 133.15C118.241 133.076 118.202 133 118.165 132.925C118.119 132.835 118.075 132.744 118.032 132.652C118.004 132.593 117.977 132.533 117.95 132.473C117.905 132.372 117.861 132.271 117.819 132.168C117.788 132.092 117.758 132.014 117.728 131.936C117.699 131.861 117.671 131.785 117.643 131.709C117.604 131.601 117.568 131.492 117.532 131.382C117.514 131.327 117.495 131.271 117.478 131.214C117.436 131.078 117.398 130.94 117.361 130.801C117.355 130.777 117.348 130.753 117.342 130.729C117.081 129.717 116.964 128.665 117 127.607V60.2593C117 54.1845 121.925 49.2594 128 49.2593Z"/></svg>
+  <span>${r.time.afterEnd||new Date(r.time.date).getTime()>Date.now()?new Date(r.time.date).toLocaleString(navigator.languages, dateFormats[r.time.format]):'Time ended'}</span>
+</span>`:''}
   </div>
   ${r.open ?
     `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" onclick="task_edi(${r.id})" viewBox="0 0 256 256"><path d="M35.1323 255.15C33.0948 255.784 31.0651 254.148 31.252 252.023L36 198L87.0001 239L35.1323 255.15Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M36 198L87 239L213.98 78.9254L162.073 38.0231L36 198ZM170.11 27.8256L222.067 68.7302L239.674 46.5338C241.391 44.3703 241.028 41.2251 238.864 39.509L194.819 4.57489C192.651 2.85513 189.498 3.22383 187.785 5.39749L170.11 27.8256Z"/></svg>` :
@@ -202,24 +228,31 @@ ${Object.values(tasks.spaces).length===1?'':`<div class="total-tasks">${Object.v
 }
 
 /* Modify size of task creation textarea */
-const TitleInput = document.getElementById('title');
-const DescTextarea = document.getElementById('desc');
+let DescTextarea = document.getElementById('desc');
 DescTextarea.oninput = ()=>{
   DescTextarea.setAttribute('rows', Math.min(Math.max(DescTextarea.value.split('\n').length, 2), 10));
 };
 
 /* Add task */
 function task_add() {
+  let TitleInput = document.getElementById('title');
+  let timeInclude = document.getElementById('time-include');
   tasks.spaces[space].contents.push({
     id: Math.floor(Math.random()*1000000),
     open: true,
-    type: document.getElementById('type').value,
+    type: 'simple',
     labels: [],
     title: TitleInput.value,
-    desc: DescTextarea.value
+    body: DescTextarea.value,
+    time: timeInclude.checked ? {
+      date: document.getElementById('time-date').value,
+      format: document.getElementById('time-format').value||'f',
+      afterEnd: document.getElementById('time-past').checked||false
+    } : null
   });
   TitleInput.value = '';
   DescTextarea.value = '';
+  if (timeInclude.checked) timeInclude.checked = false;
   DescTextarea.oninput();
   setLocalData(tasks);
 }
@@ -240,20 +273,29 @@ function task_edi(id) {
   let data = tasks.spaces[space].contents.find(t=>t.id===id);
   task.querySelector('input[type="checkbox"]').disabled = true;
   task.querySelector('div > b').innerHTML = `<input value="${data.title}">`;
-  task.querySelector('div > span').innerHTML = `<textarea>${data.desc}</textarea>`;
+  task.querySelector('div > span').innerHTML = `<textarea>${data.body}</textarea>`;
   let textarea = task.querySelector('div > span > textarea');
   textarea.setAttribute('rows', Math.min(Math.max(textarea.value.split('\n').length, 2), 10));
   textarea.oninput = ()=>{
     textarea.setAttribute('rows', Math.min(Math.max(textarea.value.split('\n').length, 2), 10));
   };
-  task.querySelector('svg').innerHTML = `<rect x="125" y="10" width="32" height="70" rx="8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20 0C8.95431 0 0 8.95431 0 20V236C0 247.046 8.95431 256 20 256H236C247.046 256 256 247.046 256 236V128V72.2843C256 66.9799 253.893 61.8929 250.142 58.1421L197.858 5.85786C194.107 2.10714 189.02 0 183.716 0H180C174.477 0 170 4.47715 170 10V80C170 85.5229 165.523 90 160 90H65C59.4772 90 55 85.5229 55 80V20C55 8.95431 46.0457 0 35 0H20ZM62 160C50.9543 160 42 168.954 42 180V215C42 226.046 50.9543 235 62 235H194C205.046 235 214 226.046 214 215V180C214 168.954 205.046 160 194 160H62Z"/>`;
-  task.querySelector('svg').onclick = ()=>{
+  task.querySelector('svg[onclick]').innerHTML = `<rect x="125" y="10" width="32" height="70" rx="8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20 0C8.95431 0 0 8.95431 0 20V236C0 247.046 8.95431 256 20 256H236C247.046 256 256 247.046 256 236V128V72.2843C256 66.9799 253.893 61.8929 250.142 58.1421L197.858 5.85786C194.107 2.10714 189.02 0 183.716 0H180C174.477 0 170 4.47715 170 10V80C170 85.5229 165.523 90 160 90H65C59.4772 90 55 85.5229 55 80V20C55 8.95431 46.0457 0 35 0H20ZM62 160C50.9543 160 42 168.954 42 180V215C42 226.046 50.9543 235 62 235H194C205.046 235 214 226.046 214 215V180C214 168.954 205.046 160 194 160H62Z"/>`;
+  task.querySelector('svg[onclick]').onclick = ()=>{
     task.querySelector('input[type="checkbox"]').disabled = false;
     data.title = task.querySelector('div > b input').value;
-    data.desc = task.querySelector('div > span textarea').value;
+    data.body = task.querySelector('div > span textarea').value;
     setLocalData(tasks);
   }
 }
+/* Make the time modal work */
+let timeDate = document.getElementById('time-date');
+let timeNow = new Date();
+timeDate.onchange = (evt)=>{
+  let date = new Date(evt.target.value);
+  document.querySelectorAll('#time-format option').forEach(opt=>opt.innerText=date.toLocaleString(navigator.languages, dateFormats[opt.value]));
+};
+timeDate.value = `${timeNow.getFullYear()}-${timeNow.getMonth().toString().padStart(2,'0')}-${timeNow.getDay().toString().padStart(2,'0')}T${timeNow.getHours().toString().padStart(2,'0')}:${timeNow.getMinutes().toString().padStart(2,'0')}`;
+timeDate.onchange();
 /* Data export/import */
 function file_exp() {
   download('tasks.ftodo', JSON.stringify(tasks));
@@ -261,14 +303,13 @@ function file_exp() {
 function file_imp() {
   document.getElementById('file_upload').click();
 }
-document.getElementById('file_upload').addEventListener('change', ()=>{
-  const reader = new FileReader();
-  reader.onload = (evt) => {
-    localStorage.setItem('todo', evt.target.result);
+document.getElementById('file_upload').onchange = (evt)=>{
+  if (!evt.target.files[0]) return;
+  evt.target.files[0].text().then(con=>{
+    localStorage.setItem('todo', con);
     getLocalData();
-  };
-  reader.readAsText(this.files[0]);
-});
+  });
+};
 
 /* Show cards at load and when data changes (for cross tab changes) */
 reload();
@@ -276,16 +317,15 @@ window.addEventListener('storage', ()=>{reload()});
 
 /* Confetti */
 window.addEventListener('click', (event) => {
-  if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox' && event.target.checked) {
-    let t = event.target.getBoundingClientRect();
-    let b = document.body.getBoundingClientRect();
-    confetti({
-      origin: {
-        x: t.x / b.width,
-        y: t.y / b.height
-      },
-      shapes: ['circle', 'square', 'star'],
-      disableForReducedMotion: true
-    });
-  }
+  if (event.target.tagName !== 'INPUT' || event.target.type !== 'checkbox' || event.target.getAttribute('name') !== 'check' || !event.target.checked) return;
+  let t = event.target.getBoundingClientRect();
+  let b = document.body.getBoundingClientRect();
+  confetti({
+    origin: {
+      x: t.x / b.width,
+      y: t.y / b.height
+    },
+    shapes: ['circle', 'square', 'star'],
+    disableForReducedMotion: true
+  });
 });
