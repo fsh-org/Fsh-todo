@@ -290,8 +290,8 @@ function task_edi(id) {
 /* Make the time modal work */
 let timeDate = document.getElementById('time-date');
 let timeNow = new Date();
-timeDate.onchange = (evt)=>{
-  let date = new Date(evt.target.value);
+timeDate.onchange = ()=>{
+  let date = new Date(timeDate.value);
   document.querySelectorAll('#time-format option').forEach(opt=>opt.innerText=date.toLocaleString(navigator.languages, dateFormats[opt.value]));
 };
 timeDate.value = `${timeNow.getFullYear()}-${timeNow.getMonth().toString().padStart(2,'0')}-${timeNow.getDay().toString().padStart(2,'0')}T${timeNow.getHours().toString().padStart(2,'0')}:${timeNow.getMinutes().toString().padStart(2,'0')}`;
