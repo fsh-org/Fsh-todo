@@ -294,7 +294,7 @@ timeDate.onchange = ()=>{
   let date = new Date(timeDate.value);
   document.querySelectorAll('#time-format option').forEach(opt=>opt.innerText=date.toLocaleString(navigator.languages, dateFormats[opt.value]));
 };
-timeDate.value = `${timeNow.getFullYear()}-${timeNow.getMonth().toString().padStart(2,'0')}-${timeNow.getDay().toString().padStart(2,'0')}T${timeNow.getHours().toString().padStart(2,'0')}:${timeNow.getMinutes().toString().padStart(2,'0')}`;
+timeDate.value = `${timeNow.getFullYear()}-${(timeNow.getMonth()+1).toString().padStart(2,'0')}-${timeNow.getDate().toString().padStart(2,'0')}T${timeNow.getHours().toString().padStart(2,'0')}:${timeNow.getMinutes().toString().padStart(2,'0')}`;
 timeDate.onchange();
 /* Data export/import */
 function file_exp() {
